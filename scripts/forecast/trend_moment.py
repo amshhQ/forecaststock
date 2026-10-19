@@ -1,6 +1,7 @@
 """Prediksi penjualan mingguan dengan metode Trend Moment."""
 
 import csv
+import sys
 from datetime import date, timedelta
 
 
@@ -136,3 +137,56 @@ def search_products(results, keyword):
         if keyword in result["name"].lower() or keyword in result["sku"].lower():
             found.append(result)
     return found
+
+
+def forecast_all(products):
+    results = []
+    for sku, product in products.items():
+        result = forecast_next_week(product["weeks"])
+        result["sku"] = sku
+        result["name"] = product["name"]
+        results.append(result)
+    return results
+
+
+OUTPUT_COLUMNS = ["sku", "name", "week_start", "x", "a", "b", "trend", "seasonal_index", "forecast"]
+
+
+def write_results(path, results):
+    """Tulis hasil ke CSV, desimal dibulatkan 4 angka."""
+    with open(path, "w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file, lineterminator="\n")
+        writer.writerow(OUTPUT_COLUMNS)
+        for r in results:
+            writer.writerow([
+                r["sku"], r["name"], r["week_start"].isoformat(), r["x"],
+                f"{r['a']:.4f}", f"{r['b']:.4f}", f"{r['trend']:.4f}",
+                f"{r['seasonal_index']:.4f}", f"{r['forecast']:.4f}",
+            ])
+
+
+def main(argv):
+    """Pemakaian: python trend_moment.py [input.csv] [output.csv]"""
+    source = argv[0] if len(argv) > 0 else "sample_sales.csv"
+    output = argv[1] if len(argv) > 1 else "forecast_result.csv"
+
+    try:
+        products = read_sales(source)
+        results = sort_by_forecast(forecast_all(products))
+        write_results(output, results)
+    except FileNotFoundError:
+        print(f"File {source} tidak ditemukan", file=sys.stderr)
+        return 1
+    except ValueError as error:
+        print(f"Gagal menghitung: {error}", file=sys.stderr)
+        return 1
+
+    print(f"{'SKU':<10}{'Produk':<22}{'Minggu':<12}{'Prediksi':>10}")
+    for r in results:
+        print(f"{r['sku']:<10}{r['name']:<22}{r['week_start'].isoformat():<12}{r['forecast']:>10.2f}")
+    print(f"\nHasil lengkap ditulis ke {output}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
