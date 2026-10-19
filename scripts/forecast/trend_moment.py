@@ -110,3 +110,29 @@ def forecast_next_week(weeks):
         "seasonal_index": seasonal_index,
         "forecast": forecast,
     }
+
+
+def sort_by_forecast(results):
+    """Urutkan dari prediksi tertinggi pakai insertion sort, O(n²).
+
+    Cukup cepat karena jumlah produk toko kecil. Data asli tidak diubah.
+    """
+    ranked = list(results)
+    for i in range(1, len(ranked)):
+        current = ranked[i]
+        j = i - 1
+        while j >= 0 and ranked[j]["forecast"] < current["forecast"]:
+            ranked[j + 1] = ranked[j]
+            j -= 1
+        ranked[j + 1] = current
+    return ranked
+
+
+def search_products(results, keyword):
+    """Linear search berdasarkan nama atau sku, O(n)."""
+    keyword = keyword.strip().lower()
+    found = []
+    for result in results:
+        if keyword in result["name"].lower() or keyword in result["sku"].lower():
+            found.append(result)
+    return found
