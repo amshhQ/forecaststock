@@ -1,0 +1,16 @@
+# Python (scripts/forecast)
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Editor & OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# backend/ dan frontend/ punya .gitignore masing-masing (vendor, node_modules, .env, dist)
+
+# Hasil default script forecast (bisa dibuat ulang)
+scripts/forecast/forecast_result.csv
