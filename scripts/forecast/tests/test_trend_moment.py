@@ -1,9 +1,11 @@
-from datetime import date
+from datetime import date, timedelta
 
 import pytest
 
 from trend_moment import (
+    forecast_next_week,
     read_sales,
+    seasonal_indices,
     trend_coefficients,
 )
 
@@ -60,3 +62,44 @@ def test_jumlah_negatif_ditolak(tmp_path):
     path = write_csv(tmp_path, "AIR,Air Mineral,botol,2026-01-05,-5\n")
     with pytest.raises(ValueError, match="baris 2"):
         read_sales(path)
+
+
+def make_weeks(first_monday, quantities):
+    return [(first_monday + timedelta(weeks=i), q) for i, q in enumerate(quantities)]
+
+
+def one_year_with_low_january():
+    return make_weeks(date(2025, 1, 6), [10] * 4 + [20] * 48)
+
+
+def test_indeks_musim_sesuai_hitungan_manual():
+    indices = seasonal_indices(one_year_with_low_january())
+    assert indices[1] == pytest.approx(0.52)
+    assert indices[6] == pytest.approx(1.04)
+    assert len(indices) == 12
+
+
+def test_indeks_musim_tidak_dipakai_jika_kurang_dari_52_minggu():
+    assert seasonal_indices(make_weeks(date(2026, 1, 5), [10, 12, 14])) == {}
+
+
+def test_prediksi_minggu_depan_tanpa_indeks_musim():
+    result = forecast_next_week(make_weeks(date(2026, 1, 5), [10, 12, 14, 16]))
+    assert result["week_start"] == date(2026, 2, 2)
+    assert result["x"] == 4
+    assert result["trend"] == pytest.approx(18)
+    assert result["seasonal_index"] == pytest.approx(1.0)
+    assert result["forecast"] == pytest.approx(18)
+
+
+def test_prediksi_memakai_indeks_musim_bulan_minggu_depan():
+    result = forecast_next_week(one_year_with_low_january())
+    assert result["week_start"] == date(2026, 1, 5)
+    assert result["seasonal_index"] == pytest.approx(0.52)
+    assert result["forecast"] == pytest.approx(result["trend"] * 0.52)
+
+
+def test_prediksi_tidak_pernah_negatif():
+    result = forecast_next_week(make_weeks(date(2026, 1, 5), [30, 15, 0]))
+    assert result["trend"] == pytest.approx(-15)
+    assert result["forecast"] == 0
