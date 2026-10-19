@@ -1,0 +1,625 @@
+sku,name,unit,week_start,quantity
+BRS-5KG,Beras 5 kg,karung,2024-10-21,41
+BRS-5KG,Beras 5 kg,karung,2024-10-28,36
+BRS-5KG,Beras 5 kg,karung,2024-11-04,38
+BRS-5KG,Beras 5 kg,karung,2024-11-11,38
+BRS-5KG,Beras 5 kg,karung,2024-11-18,42
+BRS-5KG,Beras 5 kg,karung,2024-11-25,42
+BRS-5KG,Beras 5 kg,karung,2024-12-02,50
+BRS-5KG,Beras 5 kg,karung,2024-12-09,42
+BRS-5KG,Beras 5 kg,karung,2024-12-16,46
+BRS-5KG,Beras 5 kg,karung,2024-12-23,42
+BRS-5KG,Beras 5 kg,karung,2024-12-30,44
+BRS-5KG,Beras 5 kg,karung,2025-01-06,40
+BRS-5KG,Beras 5 kg,karung,2025-01-13,37
+BRS-5KG,Beras 5 kg,karung,2025-01-20,38
+BRS-5KG,Beras 5 kg,karung,2025-01-27,42
+BRS-5KG,Beras 5 kg,karung,2025-02-03,41
+BRS-5KG,Beras 5 kg,karung,2025-02-10,38
+BRS-5KG,Beras 5 kg,karung,2025-02-17,41
+BRS-5KG,Beras 5 kg,karung,2025-02-24,43
+BRS-5KG,Beras 5 kg,karung,2025-03-03,50
+BRS-5KG,Beras 5 kg,karung,2025-03-10,58
+BRS-5KG,Beras 5 kg,karung,2025-03-17,57
+BRS-5KG,Beras 5 kg,karung,2025-03-24,53
+BRS-5KG,Beras 5 kg,karung,2025-03-31,51
+BRS-5KG,Beras 5 kg,karung,2025-04-07,60
+BRS-5KG,Beras 5 kg,karung,2025-04-14,54
+BRS-5KG,Beras 5 kg,karung,2025-04-21,51
+BRS-5KG,Beras 5 kg,karung,2025-04-28,51
+BRS-5KG,Beras 5 kg,karung,2025-05-05,44
+BRS-5KG,Beras 5 kg,karung,2025-05-12,42
+BRS-5KG,Beras 5 kg,karung,2025-05-19,44
+BRS-5KG,Beras 5 kg,karung,2025-05-26,43
+BRS-5KG,Beras 5 kg,karung,2025-06-02,42
+BRS-5KG,Beras 5 kg,karung,2025-06-09,45
+BRS-5KG,Beras 5 kg,karung,2025-06-16,40
+BRS-5KG,Beras 5 kg,karung,2025-06-23,42
+BRS-5KG,Beras 5 kg,karung,2025-06-30,44
+BRS-5KG,Beras 5 kg,karung,2025-07-07,42
+BRS-5KG,Beras 5 kg,karung,2025-07-14,45
+BRS-5KG,Beras 5 kg,karung,2025-07-21,42
+BRS-5KG,Beras 5 kg,karung,2025-07-28,43
+BRS-5KG,Beras 5 kg,karung,2025-08-04,38
+BRS-5KG,Beras 5 kg,karung,2025-08-11,39
+BRS-5KG,Beras 5 kg,karung,2025-08-18,40
+BRS-5KG,Beras 5 kg,karung,2025-08-25,38
+BRS-5KG,Beras 5 kg,karung,2025-09-01,40
+BRS-5KG,Beras 5 kg,karung,2025-09-08,39
+BRS-5KG,Beras 5 kg,karung,2025-09-15,40
+BRS-5KG,Beras 5 kg,karung,2025-09-22,43
+BRS-5KG,Beras 5 kg,karung,2025-09-29,41
+BRS-5KG,Beras 5 kg,karung,2025-10-06,41
+BRS-5KG,Beras 5 kg,karung,2025-10-13,40
+BRS-5KG,Beras 5 kg,karung,2025-10-20,40
+BRS-5KG,Beras 5 kg,karung,2025-10-27,46
+BRS-5KG,Beras 5 kg,karung,2025-11-03,43
+BRS-5KG,Beras 5 kg,karung,2025-11-10,43
+BRS-5KG,Beras 5 kg,karung,2025-11-17,40
+BRS-5KG,Beras 5 kg,karung,2025-11-24,44
+BRS-5KG,Beras 5 kg,karung,2025-12-01,45
+BRS-5KG,Beras 5 kg,karung,2025-12-08,48
+BRS-5KG,Beras 5 kg,karung,2025-12-15,54
+BRS-5KG,Beras 5 kg,karung,2025-12-22,50
+BRS-5KG,Beras 5 kg,karung,2025-12-29,49
+BRS-5KG,Beras 5 kg,karung,2026-01-05,44
+BRS-5KG,Beras 5 kg,karung,2026-01-12,46
+BRS-5KG,Beras 5 kg,karung,2026-01-19,45
+BRS-5KG,Beras 5 kg,karung,2026-01-26,40
+BRS-5KG,Beras 5 kg,karung,2026-02-02,39
+BRS-5KG,Beras 5 kg,karung,2026-02-09,41
+BRS-5KG,Beras 5 kg,karung,2026-02-16,41
+BRS-5KG,Beras 5 kg,karung,2026-02-23,40
+BRS-5KG,Beras 5 kg,karung,2026-03-02,63
+BRS-5KG,Beras 5 kg,karung,2026-03-09,62
+BRS-5KG,Beras 5 kg,karung,2026-03-16,56
+BRS-5KG,Beras 5 kg,karung,2026-03-23,60
+BRS-5KG,Beras 5 kg,karung,2026-03-30,57
+BRS-5KG,Beras 5 kg,karung,2026-04-06,63
+BRS-5KG,Beras 5 kg,karung,2026-04-13,58
+BRS-5KG,Beras 5 kg,karung,2026-04-20,56
+BRS-5KG,Beras 5 kg,karung,2026-04-27,55
+BRS-5KG,Beras 5 kg,karung,2026-05-04,44
+BRS-5KG,Beras 5 kg,karung,2026-05-11,41
+BRS-5KG,Beras 5 kg,karung,2026-05-18,44
+BRS-5KG,Beras 5 kg,karung,2026-05-25,47
+BRS-5KG,Beras 5 kg,karung,2026-06-01,43
+BRS-5KG,Beras 5 kg,karung,2026-06-08,41
+BRS-5KG,Beras 5 kg,karung,2026-06-15,48
+BRS-5KG,Beras 5 kg,karung,2026-06-22,44
+BRS-5KG,Beras 5 kg,karung,2026-06-29,40
+BRS-5KG,Beras 5 kg,karung,2026-07-06,40
+BRS-5KG,Beras 5 kg,karung,2026-07-13,40
+BRS-5KG,Beras 5 kg,karung,2026-07-20,45
+BRS-5KG,Beras 5 kg,karung,2026-07-27,46
+BRS-5KG,Beras 5 kg,karung,2026-08-03,43
+BRS-5KG,Beras 5 kg,karung,2026-08-10,40
+BRS-5KG,Beras 5 kg,karung,2026-08-17,43
+BRS-5KG,Beras 5 kg,karung,2026-08-24,48
+BRS-5KG,Beras 5 kg,karung,2026-08-31,44
+BRS-5KG,Beras 5 kg,karung,2026-09-07,48
+BRS-5KG,Beras 5 kg,karung,2026-09-14,47
+BRS-5KG,Beras 5 kg,karung,2026-09-21,40
+BRS-5KG,Beras 5 kg,karung,2026-09-28,46
+BRS-5KG,Beras 5 kg,karung,2026-10-05,46
+BRS-5KG,Beras 5 kg,karung,2026-10-12,45
+MYK-1L,Minyak Goreng 1 L,botol,2024-10-21,52
+MYK-1L,Minyak Goreng 1 L,botol,2024-10-28,57
+MYK-1L,Minyak Goreng 1 L,botol,2024-11-04,51
+MYK-1L,Minyak Goreng 1 L,botol,2024-11-11,54
+MYK-1L,Minyak Goreng 1 L,botol,2024-11-18,55
+MYK-1L,Minyak Goreng 1 L,botol,2024-11-25,60
+MYK-1L,Minyak Goreng 1 L,botol,2024-12-02,68
+MYK-1L,Minyak Goreng 1 L,botol,2024-12-09,60
+MYK-1L,Minyak Goreng 1 L,botol,2024-12-16,64
+MYK-1L,Minyak Goreng 1 L,botol,2024-12-23,59
+MYK-1L,Minyak Goreng 1 L,botol,2024-12-30,69
+MYK-1L,Minyak Goreng 1 L,botol,2025-01-06,59
+MYK-1L,Minyak Goreng 1 L,botol,2025-01-13,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-01-20,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-01-27,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-02-03,52
+MYK-1L,Minyak Goreng 1 L,botol,2025-02-10,58
+MYK-1L,Minyak Goreng 1 L,botol,2025-02-17,56
+MYK-1L,Minyak Goreng 1 L,botol,2025-02-24,59
+MYK-1L,Minyak Goreng 1 L,botol,2025-03-03,75
+MYK-1L,Minyak Goreng 1 L,botol,2025-03-10,68
+MYK-1L,Minyak Goreng 1 L,botol,2025-03-17,72
+MYK-1L,Minyak Goreng 1 L,botol,2025-03-24,68
+MYK-1L,Minyak Goreng 1 L,botol,2025-03-31,82
+MYK-1L,Minyak Goreng 1 L,botol,2025-04-07,81
+MYK-1L,Minyak Goreng 1 L,botol,2025-04-14,80
+MYK-1L,Minyak Goreng 1 L,botol,2025-04-21,72
+MYK-1L,Minyak Goreng 1 L,botol,2025-04-28,69
+MYK-1L,Minyak Goreng 1 L,botol,2025-05-05,60
+MYK-1L,Minyak Goreng 1 L,botol,2025-05-12,61
+MYK-1L,Minyak Goreng 1 L,botol,2025-05-19,51
+MYK-1L,Minyak Goreng 1 L,botol,2025-05-26,56
+MYK-1L,Minyak Goreng 1 L,botol,2025-06-02,51
+MYK-1L,Minyak Goreng 1 L,botol,2025-06-09,59
+MYK-1L,Minyak Goreng 1 L,botol,2025-06-16,59
+MYK-1L,Minyak Goreng 1 L,botol,2025-06-23,52
+MYK-1L,Minyak Goreng 1 L,botol,2025-06-30,56
+MYK-1L,Minyak Goreng 1 L,botol,2025-07-07,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-07-14,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-07-21,60
+MYK-1L,Minyak Goreng 1 L,botol,2025-07-28,55
+MYK-1L,Minyak Goreng 1 L,botol,2025-08-04,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-08-11,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-08-18,59
+MYK-1L,Minyak Goreng 1 L,botol,2025-08-25,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-09-01,54
+MYK-1L,Minyak Goreng 1 L,botol,2025-09-08,62
+MYK-1L,Minyak Goreng 1 L,botol,2025-09-15,58
+MYK-1L,Minyak Goreng 1 L,botol,2025-09-22,56
+MYK-1L,Minyak Goreng 1 L,botol,2025-09-29,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-10-06,52
+MYK-1L,Minyak Goreng 1 L,botol,2025-10-13,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-10-20,55
+MYK-1L,Minyak Goreng 1 L,botol,2025-10-27,57
+MYK-1L,Minyak Goreng 1 L,botol,2025-11-03,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-11-10,53
+MYK-1L,Minyak Goreng 1 L,botol,2025-11-17,52
+MYK-1L,Minyak Goreng 1 L,botol,2025-11-24,58
+MYK-1L,Minyak Goreng 1 L,botol,2025-12-01,62
+MYK-1L,Minyak Goreng 1 L,botol,2025-12-08,70
+MYK-1L,Minyak Goreng 1 L,botol,2025-12-15,70
+MYK-1L,Minyak Goreng 1 L,botol,2025-12-22,60
+MYK-1L,Minyak Goreng 1 L,botol,2025-12-29,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-01-05,59
+MYK-1L,Minyak Goreng 1 L,botol,2026-01-12,54
+MYK-1L,Minyak Goreng 1 L,botol,2026-01-19,53
+MYK-1L,Minyak Goreng 1 L,botol,2026-01-26,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-02-02,58
+MYK-1L,Minyak Goreng 1 L,botol,2026-02-09,57
+MYK-1L,Minyak Goreng 1 L,botol,2026-02-16,60
+MYK-1L,Minyak Goreng 1 L,botol,2026-02-23,60
+MYK-1L,Minyak Goreng 1 L,botol,2026-03-02,72
+MYK-1L,Minyak Goreng 1 L,botol,2026-03-09,71
+MYK-1L,Minyak Goreng 1 L,botol,2026-03-16,76
+MYK-1L,Minyak Goreng 1 L,botol,2026-03-23,76
+MYK-1L,Minyak Goreng 1 L,botol,2026-03-30,77
+MYK-1L,Minyak Goreng 1 L,botol,2026-04-06,81
+MYK-1L,Minyak Goreng 1 L,botol,2026-04-13,80
+MYK-1L,Minyak Goreng 1 L,botol,2026-04-20,85
+MYK-1L,Minyak Goreng 1 L,botol,2026-04-27,71
+MYK-1L,Minyak Goreng 1 L,botol,2026-05-04,56
+MYK-1L,Minyak Goreng 1 L,botol,2026-05-11,55
+MYK-1L,Minyak Goreng 1 L,botol,2026-05-18,61
+MYK-1L,Minyak Goreng 1 L,botol,2026-05-25,54
+MYK-1L,Minyak Goreng 1 L,botol,2026-06-01,54
+MYK-1L,Minyak Goreng 1 L,botol,2026-06-08,57
+MYK-1L,Minyak Goreng 1 L,botol,2026-06-15,57
+MYK-1L,Minyak Goreng 1 L,botol,2026-06-22,55
+MYK-1L,Minyak Goreng 1 L,botol,2026-06-29,55
+MYK-1L,Minyak Goreng 1 L,botol,2026-07-06,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-07-13,57
+MYK-1L,Minyak Goreng 1 L,botol,2026-07-20,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-07-27,58
+MYK-1L,Minyak Goreng 1 L,botol,2026-08-03,52
+MYK-1L,Minyak Goreng 1 L,botol,2026-08-10,63
+MYK-1L,Minyak Goreng 1 L,botol,2026-08-17,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-08-24,63
+MYK-1L,Minyak Goreng 1 L,botol,2026-08-31,63
+MYK-1L,Minyak Goreng 1 L,botol,2026-09-07,62
+MYK-1L,Minyak Goreng 1 L,botol,2026-09-14,54
+MYK-1L,Minyak Goreng 1 L,botol,2026-09-21,58
+MYK-1L,Minyak Goreng 1 L,botol,2026-09-28,55
+MYK-1L,Minyak Goreng 1 L,botol,2026-10-05,57
+MYK-1L,Minyak Goreng 1 L,botol,2026-10-12,53
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-10-21,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-10-28,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-11-04,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-11-11,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-11-18,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-11-25,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-12-02,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-12-09,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-12-16,41
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-12-23,42
+GLP-1KG,Gula Pasir 1 kg,bungkus,2024-12-30,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-01-06,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-01-13,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-01-20,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-01-27,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-02-03,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-02-10,32
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-02-17,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-02-24,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-03-03,51
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-03-10,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-03-17,52
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-03-24,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-03-31,45
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-04-07,49
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-04-14,50
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-04-21,45
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-04-28,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-05-05,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-05-12,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-05-19,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-05-26,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-06-02,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-06-09,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-06-16,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-06-23,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-06-30,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-07-07,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-07-14,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-07-21,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-07-28,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-08-04,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-08-11,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-08-18,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-08-25,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-09-01,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-09-08,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-09-15,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-09-22,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-09-29,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-10-06,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-10-13,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-10-20,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-10-27,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-11-03,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-11-10,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-11-17,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-11-24,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-12-01,42
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-12-08,45
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-12-15,43
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-12-22,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2025-12-29,44
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-01-05,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-01-12,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-01-19,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-01-26,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-02-02,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-02-09,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-02-16,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-02-23,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-03-02,50
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-03-09,51
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-03-16,46
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-03-23,50
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-03-30,47
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-04-06,49
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-04-13,53
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-04-20,53
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-04-27,45
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-05-04,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-05-11,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-05-18,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-05-25,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-06-01,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-06-08,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-06-15,38
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-06-22,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-06-29,36
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-07-06,33
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-07-13,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-07-20,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-07-27,40
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-08-03,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-08-10,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-08-17,37
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-08-24,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-08-31,34
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-09-07,35
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-09-14,40
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-09-21,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-09-28,39
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-10-05,40
+GLP-1KG,Gula Pasir 1 kg,bungkus,2026-10-12,35
+MIE-INS,Mi Instan,bungkus,2024-10-21,114
+MIE-INS,Mi Instan,bungkus,2024-10-28,111
+MIE-INS,Mi Instan,bungkus,2024-11-04,153
+MIE-INS,Mi Instan,bungkus,2024-11-11,156
+MIE-INS,Mi Instan,bungkus,2024-11-18,142
+MIE-INS,Mi Instan,bungkus,2024-11-25,149
+MIE-INS,Mi Instan,bungkus,2024-12-02,135
+MIE-INS,Mi Instan,bungkus,2024-12-09,158
+MIE-INS,Mi Instan,bungkus,2024-12-16,156
+MIE-INS,Mi Instan,bungkus,2024-12-23,160
+MIE-INS,Mi Instan,bungkus,2024-12-30,155
+MIE-INS,Mi Instan,bungkus,2025-01-06,158
+MIE-INS,Mi Instan,bungkus,2025-01-13,133
+MIE-INS,Mi Instan,bungkus,2025-01-20,154
+MIE-INS,Mi Instan,bungkus,2025-01-27,142
+MIE-INS,Mi Instan,bungkus,2025-02-03,160
+MIE-INS,Mi Instan,bungkus,2025-02-10,156
+MIE-INS,Mi Instan,bungkus,2025-02-17,158
+MIE-INS,Mi Instan,bungkus,2025-02-24,157
+MIE-INS,Mi Instan,bungkus,2025-03-03,141
+MIE-INS,Mi Instan,bungkus,2025-03-10,157
+MIE-INS,Mi Instan,bungkus,2025-03-17,137
+MIE-INS,Mi Instan,bungkus,2025-03-24,160
+MIE-INS,Mi Instan,bungkus,2025-03-31,160
+MIE-INS,Mi Instan,bungkus,2025-04-07,117
+MIE-INS,Mi Instan,bungkus,2025-04-14,132
+MIE-INS,Mi Instan,bungkus,2025-04-21,124
+MIE-INS,Mi Instan,bungkus,2025-04-28,120
+MIE-INS,Mi Instan,bungkus,2025-05-05,133
+MIE-INS,Mi Instan,bungkus,2025-05-12,119
+MIE-INS,Mi Instan,bungkus,2025-05-19,114
+MIE-INS,Mi Instan,bungkus,2025-05-26,118
+MIE-INS,Mi Instan,bungkus,2025-06-02,122
+MIE-INS,Mi Instan,bungkus,2025-06-09,135
+MIE-INS,Mi Instan,bungkus,2025-06-16,138
+MIE-INS,Mi Instan,bungkus,2025-06-23,121
+MIE-INS,Mi Instan,bungkus,2025-06-30,130
+MIE-INS,Mi Instan,bungkus,2025-07-07,124
+MIE-INS,Mi Instan,bungkus,2025-07-14,139
+MIE-INS,Mi Instan,bungkus,2025-07-21,128
+MIE-INS,Mi Instan,bungkus,2025-07-28,139
+MIE-INS,Mi Instan,bungkus,2025-08-04,118
+MIE-INS,Mi Instan,bungkus,2025-08-11,140
+MIE-INS,Mi Instan,bungkus,2025-08-18,120
+MIE-INS,Mi Instan,bungkus,2025-08-25,140
+MIE-INS,Mi Instan,bungkus,2025-09-01,122
+MIE-INS,Mi Instan,bungkus,2025-09-08,118
+MIE-INS,Mi Instan,bungkus,2025-09-15,127
+MIE-INS,Mi Instan,bungkus,2025-09-22,135
+MIE-INS,Mi Instan,bungkus,2025-09-29,124
+MIE-INS,Mi Instan,bungkus,2025-10-06,132
+MIE-INS,Mi Instan,bungkus,2025-10-13,130
+MIE-INS,Mi Instan,bungkus,2025-10-20,127
+MIE-INS,Mi Instan,bungkus,2025-10-27,132
+MIE-INS,Mi Instan,bungkus,2025-11-03,148
+MIE-INS,Mi Instan,bungkus,2025-11-10,163
+MIE-INS,Mi Instan,bungkus,2025-11-17,141
+MIE-INS,Mi Instan,bungkus,2025-11-24,170
+MIE-INS,Mi Instan,bungkus,2025-12-01,158
+MIE-INS,Mi Instan,bungkus,2025-12-08,164
+MIE-INS,Mi Instan,bungkus,2025-12-15,165
+MIE-INS,Mi Instan,bungkus,2025-12-22,163
+MIE-INS,Mi Instan,bungkus,2025-12-29,154
+MIE-INS,Mi Instan,bungkus,2026-01-05,145
+MIE-INS,Mi Instan,bungkus,2026-01-12,164
+MIE-INS,Mi Instan,bungkus,2026-01-19,153
+MIE-INS,Mi Instan,bungkus,2026-01-26,153
+MIE-INS,Mi Instan,bungkus,2026-02-02,170
+MIE-INS,Mi Instan,bungkus,2026-02-09,166
+MIE-INS,Mi Instan,bungkus,2026-02-16,153
+MIE-INS,Mi Instan,bungkus,2026-02-23,154
+MIE-INS,Mi Instan,bungkus,2026-03-02,157
+MIE-INS,Mi Instan,bungkus,2026-03-09,157
+MIE-INS,Mi Instan,bungkus,2026-03-16,154
+MIE-INS,Mi Instan,bungkus,2026-03-23,149
+MIE-INS,Mi Instan,bungkus,2026-03-30,159
+MIE-INS,Mi Instan,bungkus,2026-04-06,146
+MIE-INS,Mi Instan,bungkus,2026-04-13,139
+MIE-INS,Mi Instan,bungkus,2026-04-20,146
+MIE-INS,Mi Instan,bungkus,2026-04-27,138
+MIE-INS,Mi Instan,bungkus,2026-05-04,130
+MIE-INS,Mi Instan,bungkus,2026-05-11,137
+MIE-INS,Mi Instan,bungkus,2026-05-18,122
+MIE-INS,Mi Instan,bungkus,2026-05-25,130
+MIE-INS,Mi Instan,bungkus,2026-06-01,134
+MIE-INS,Mi Instan,bungkus,2026-06-08,138
+MIE-INS,Mi Instan,bungkus,2026-06-15,141
+MIE-INS,Mi Instan,bungkus,2026-06-22,136
+MIE-INS,Mi Instan,bungkus,2026-06-29,135
+MIE-INS,Mi Instan,bungkus,2026-07-06,129
+MIE-INS,Mi Instan,bungkus,2026-07-13,137
+MIE-INS,Mi Instan,bungkus,2026-07-20,149
+MIE-INS,Mi Instan,bungkus,2026-07-27,146
+MIE-INS,Mi Instan,bungkus,2026-08-03,129
+MIE-INS,Mi Instan,bungkus,2026-08-10,127
+MIE-INS,Mi Instan,bungkus,2026-08-17,139
+MIE-INS,Mi Instan,bungkus,2026-08-24,142
+MIE-INS,Mi Instan,bungkus,2026-08-31,134
+MIE-INS,Mi Instan,bungkus,2026-09-07,148
+MIE-INS,Mi Instan,bungkus,2026-09-14,146
+MIE-INS,Mi Instan,bungkus,2026-09-21,144
+MIE-INS,Mi Instan,bungkus,2026-09-28,132
+MIE-INS,Mi Instan,bungkus,2026-10-05,131
+MIE-INS,Mi Instan,bungkus,2026-10-12,127
+AIR-600,Air Mineral 600 ml,botol,2024-10-21,142
+AIR-600,Air Mineral 600 ml,botol,2024-10-28,149
+AIR-600,Air Mineral 600 ml,botol,2024-11-04,121
+AIR-600,Air Mineral 600 ml,botol,2024-11-11,103
+AIR-600,Air Mineral 600 ml,botol,2024-11-18,111
+AIR-600,Air Mineral 600 ml,botol,2024-11-25,116
+AIR-600,Air Mineral 600 ml,botol,2024-12-02,106
+AIR-600,Air Mineral 600 ml,botol,2024-12-09,118
+AIR-600,Air Mineral 600 ml,botol,2024-12-16,113
+AIR-600,Air Mineral 600 ml,botol,2024-12-23,108
+AIR-600,Air Mineral 600 ml,botol,2024-12-30,117
+AIR-600,Air Mineral 600 ml,botol,2025-01-06,102
+AIR-600,Air Mineral 600 ml,botol,2025-01-13,120
+AIR-600,Air Mineral 600 ml,botol,2025-01-20,120
+AIR-600,Air Mineral 600 ml,botol,2025-01-27,105
+AIR-600,Air Mineral 600 ml,botol,2025-02-03,112
+AIR-600,Air Mineral 600 ml,botol,2025-02-10,107
+AIR-600,Air Mineral 600 ml,botol,2025-02-17,125
+AIR-600,Air Mineral 600 ml,botol,2025-02-24,115
+AIR-600,Air Mineral 600 ml,botol,2025-03-03,104
+AIR-600,Air Mineral 600 ml,botol,2025-03-10,109
+AIR-600,Air Mineral 600 ml,botol,2025-03-17,123
+AIR-600,Air Mineral 600 ml,botol,2025-03-24,114
+AIR-600,Air Mineral 600 ml,botol,2025-03-31,122
+AIR-600,Air Mineral 600 ml,botol,2025-04-07,159
+AIR-600,Air Mineral 600 ml,botol,2025-04-14,169
+AIR-600,Air Mineral 600 ml,botol,2025-04-21,157
+AIR-600,Air Mineral 600 ml,botol,2025-04-28,168
+AIR-600,Air Mineral 600 ml,botol,2025-05-05,166
+AIR-600,Air Mineral 600 ml,botol,2025-05-12,158
+AIR-600,Air Mineral 600 ml,botol,2025-05-19,161
+AIR-600,Air Mineral 600 ml,botol,2025-05-26,155
+AIR-600,Air Mineral 600 ml,botol,2025-06-02,165
+AIR-600,Air Mineral 600 ml,botol,2025-06-09,157
+AIR-600,Air Mineral 600 ml,botol,2025-06-16,168
+AIR-600,Air Mineral 600 ml,botol,2025-06-23,163
+AIR-600,Air Mineral 600 ml,botol,2025-06-30,155
+AIR-600,Air Mineral 600 ml,botol,2025-07-07,170
+AIR-600,Air Mineral 600 ml,botol,2025-07-14,170
+AIR-600,Air Mineral 600 ml,botol,2025-07-21,184
+AIR-600,Air Mineral 600 ml,botol,2025-07-28,189
+AIR-600,Air Mineral 600 ml,botol,2025-08-04,180
+AIR-600,Air Mineral 600 ml,botol,2025-08-11,184
+AIR-600,Air Mineral 600 ml,botol,2025-08-18,172
+AIR-600,Air Mineral 600 ml,botol,2025-08-25,165
+AIR-600,Air Mineral 600 ml,botol,2025-09-01,173
+AIR-600,Air Mineral 600 ml,botol,2025-09-08,172
+AIR-600,Air Mineral 600 ml,botol,2025-09-15,174
+AIR-600,Air Mineral 600 ml,botol,2025-09-22,182
+AIR-600,Air Mineral 600 ml,botol,2025-09-29,168
+AIR-600,Air Mineral 600 ml,botol,2025-10-06,149
+AIR-600,Air Mineral 600 ml,botol,2025-10-13,164
+AIR-600,Air Mineral 600 ml,botol,2025-10-20,165
+AIR-600,Air Mineral 600 ml,botol,2025-10-27,144
+AIR-600,Air Mineral 600 ml,botol,2025-11-03,117
+AIR-600,Air Mineral 600 ml,botol,2025-11-10,120
+AIR-600,Air Mineral 600 ml,botol,2025-11-17,117
+AIR-600,Air Mineral 600 ml,botol,2025-11-24,112
+AIR-600,Air Mineral 600 ml,botol,2025-12-01,117
+AIR-600,Air Mineral 600 ml,botol,2025-12-08,129
+AIR-600,Air Mineral 600 ml,botol,2025-12-15,121
+AIR-600,Air Mineral 600 ml,botol,2025-12-22,124
+AIR-600,Air Mineral 600 ml,botol,2025-12-29,128
+AIR-600,Air Mineral 600 ml,botol,2026-01-05,126
+AIR-600,Air Mineral 600 ml,botol,2026-01-12,117
+AIR-600,Air Mineral 600 ml,botol,2026-01-19,108
+AIR-600,Air Mineral 600 ml,botol,2026-01-26,117
+AIR-600,Air Mineral 600 ml,botol,2026-02-02,126
+AIR-600,Air Mineral 600 ml,botol,2026-02-09,129
+AIR-600,Air Mineral 600 ml,botol,2026-02-16,131
+AIR-600,Air Mineral 600 ml,botol,2026-02-23,119
+AIR-600,Air Mineral 600 ml,botol,2026-03-02,127
+AIR-600,Air Mineral 600 ml,botol,2026-03-09,122
+AIR-600,Air Mineral 600 ml,botol,2026-03-16,124
+AIR-600,Air Mineral 600 ml,botol,2026-03-23,114
+AIR-600,Air Mineral 600 ml,botol,2026-03-30,114
+AIR-600,Air Mineral 600 ml,botol,2026-04-06,160
+AIR-600,Air Mineral 600 ml,botol,2026-04-13,147
+AIR-600,Air Mineral 600 ml,botol,2026-04-20,157
+AIR-600,Air Mineral 600 ml,botol,2026-04-27,168
+AIR-600,Air Mineral 600 ml,botol,2026-05-04,159
+AIR-600,Air Mineral 600 ml,botol,2026-05-11,152
+AIR-600,Air Mineral 600 ml,botol,2026-05-18,162
+AIR-600,Air Mineral 600 ml,botol,2026-05-25,151
+AIR-600,Air Mineral 600 ml,botol,2026-06-01,167
+AIR-600,Air Mineral 600 ml,botol,2026-06-08,148
+AIR-600,Air Mineral 600 ml,botol,2026-06-15,160
+AIR-600,Air Mineral 600 ml,botol,2026-06-22,166
+AIR-600,Air Mineral 600 ml,botol,2026-06-29,148
+AIR-600,Air Mineral 600 ml,botol,2026-07-06,194
+AIR-600,Air Mineral 600 ml,botol,2026-07-13,175
+AIR-600,Air Mineral 600 ml,botol,2026-07-20,187
+AIR-600,Air Mineral 600 ml,botol,2026-07-27,172
+AIR-600,Air Mineral 600 ml,botol,2026-08-03,185
+AIR-600,Air Mineral 600 ml,botol,2026-08-10,179
+AIR-600,Air Mineral 600 ml,botol,2026-08-17,183
+AIR-600,Air Mineral 600 ml,botol,2026-08-24,200
+AIR-600,Air Mineral 600 ml,botol,2026-08-31,185
+AIR-600,Air Mineral 600 ml,botol,2026-09-07,200
+AIR-600,Air Mineral 600 ml,botol,2026-09-14,203
+AIR-600,Air Mineral 600 ml,botol,2026-09-21,181
+AIR-600,Air Mineral 600 ml,botol,2026-09-28,175
+AIR-600,Air Mineral 600 ml,botol,2026-10-05,150
+AIR-600,Air Mineral 600 ml,botol,2026-10-12,168
+KPI-SCT,Kopi Sachet,sachet,2024-10-21,99
+KPI-SCT,Kopi Sachet,sachet,2024-10-28,87
+KPI-SCT,Kopi Sachet,sachet,2024-11-04,112
+KPI-SCT,Kopi Sachet,sachet,2024-11-11,115
+KPI-SCT,Kopi Sachet,sachet,2024-11-18,112
+KPI-SCT,Kopi Sachet,sachet,2024-11-25,115
+KPI-SCT,Kopi Sachet,sachet,2024-12-02,119
+KPI-SCT,Kopi Sachet,sachet,2024-12-09,103
+KPI-SCT,Kopi Sachet,sachet,2024-12-16,99
+KPI-SCT,Kopi Sachet,sachet,2024-12-23,102
+KPI-SCT,Kopi Sachet,sachet,2024-12-30,102
+KPI-SCT,Kopi Sachet,sachet,2025-01-06,114
+KPI-SCT,Kopi Sachet,sachet,2025-01-13,112
+KPI-SCT,Kopi Sachet,sachet,2025-01-20,105
+KPI-SCT,Kopi Sachet,sachet,2025-01-27,115
+KPI-SCT,Kopi Sachet,sachet,2025-02-03,117
+KPI-SCT,Kopi Sachet,sachet,2025-02-10,104
+KPI-SCT,Kopi Sachet,sachet,2025-02-17,114
+KPI-SCT,Kopi Sachet,sachet,2025-02-24,118
+KPI-SCT,Kopi Sachet,sachet,2025-03-03,104
+KPI-SCT,Kopi Sachet,sachet,2025-03-10,120
+KPI-SCT,Kopi Sachet,sachet,2025-03-17,123
+KPI-SCT,Kopi Sachet,sachet,2025-03-24,104
+KPI-SCT,Kopi Sachet,sachet,2025-03-31,102
+KPI-SCT,Kopi Sachet,sachet,2025-04-07,91
+KPI-SCT,Kopi Sachet,sachet,2025-04-14,98
+KPI-SCT,Kopi Sachet,sachet,2025-04-21,103
+KPI-SCT,Kopi Sachet,sachet,2025-04-28,93
+KPI-SCT,Kopi Sachet,sachet,2025-05-05,99
+KPI-SCT,Kopi Sachet,sachet,2025-05-12,87
+KPI-SCT,Kopi Sachet,sachet,2025-05-19,99
+KPI-SCT,Kopi Sachet,sachet,2025-05-26,98
+KPI-SCT,Kopi Sachet,sachet,2025-06-02,88
+KPI-SCT,Kopi Sachet,sachet,2025-06-09,101
+KPI-SCT,Kopi Sachet,sachet,2025-06-16,103
+KPI-SCT,Kopi Sachet,sachet,2025-06-23,98
+KPI-SCT,Kopi Sachet,sachet,2025-06-30,89
+KPI-SCT,Kopi Sachet,sachet,2025-07-07,106
+KPI-SCT,Kopi Sachet,sachet,2025-07-14,103
+KPI-SCT,Kopi Sachet,sachet,2025-07-21,94
+KPI-SCT,Kopi Sachet,sachet,2025-07-28,96
+KPI-SCT,Kopi Sachet,sachet,2025-08-04,95
+KPI-SCT,Kopi Sachet,sachet,2025-08-11,98
+KPI-SCT,Kopi Sachet,sachet,2025-08-18,95
+KPI-SCT,Kopi Sachet,sachet,2025-08-25,105
+KPI-SCT,Kopi Sachet,sachet,2025-09-01,105
+KPI-SCT,Kopi Sachet,sachet,2025-09-08,91
+KPI-SCT,Kopi Sachet,sachet,2025-09-15,108
+KPI-SCT,Kopi Sachet,sachet,2025-09-22,102
+KPI-SCT,Kopi Sachet,sachet,2025-09-29,106
+KPI-SCT,Kopi Sachet,sachet,2025-10-06,104
+KPI-SCT,Kopi Sachet,sachet,2025-10-13,98
+KPI-SCT,Kopi Sachet,sachet,2025-10-20,105
+KPI-SCT,Kopi Sachet,sachet,2025-10-27,109
+KPI-SCT,Kopi Sachet,sachet,2025-11-03,115
+KPI-SCT,Kopi Sachet,sachet,2025-11-10,128
+KPI-SCT,Kopi Sachet,sachet,2025-11-17,122
+KPI-SCT,Kopi Sachet,sachet,2025-11-24,121
+KPI-SCT,Kopi Sachet,sachet,2025-12-01,120
+KPI-SCT,Kopi Sachet,sachet,2025-12-08,127
+KPI-SCT,Kopi Sachet,sachet,2025-12-15,116
+KPI-SCT,Kopi Sachet,sachet,2025-12-22,131
+KPI-SCT,Kopi Sachet,sachet,2025-12-29,130
+KPI-SCT,Kopi Sachet,sachet,2026-01-05,112
+KPI-SCT,Kopi Sachet,sachet,2026-01-12,132
+KPI-SCT,Kopi Sachet,sachet,2026-01-19,117
+KPI-SCT,Kopi Sachet,sachet,2026-01-26,122
+KPI-SCT,Kopi Sachet,sachet,2026-02-02,126
+KPI-SCT,Kopi Sachet,sachet,2026-02-09,121
+KPI-SCT,Kopi Sachet,sachet,2026-02-16,112
+KPI-SCT,Kopi Sachet,sachet,2026-02-23,133
+KPI-SCT,Kopi Sachet,sachet,2026-03-02,117
+KPI-SCT,Kopi Sachet,sachet,2026-03-09,118
+KPI-SCT,Kopi Sachet,sachet,2026-03-16,132
+KPI-SCT,Kopi Sachet,sachet,2026-03-23,121
+KPI-SCT,Kopi Sachet,sachet,2026-03-30,135
+KPI-SCT,Kopi Sachet,sachet,2026-04-06,109
+KPI-SCT,Kopi Sachet,sachet,2026-04-13,100
+KPI-SCT,Kopi Sachet,sachet,2026-04-20,95
+KPI-SCT,Kopi Sachet,sachet,2026-04-27,115
+KPI-SCT,Kopi Sachet,sachet,2026-05-04,97
+KPI-SCT,Kopi Sachet,sachet,2026-05-11,110
+KPI-SCT,Kopi Sachet,sachet,2026-05-18,106
+KPI-SCT,Kopi Sachet,sachet,2026-05-25,112
+KPI-SCT,Kopi Sachet,sachet,2026-06-01,111
+KPI-SCT,Kopi Sachet,sachet,2026-06-08,110
+KPI-SCT,Kopi Sachet,sachet,2026-06-15,107
+KPI-SCT,Kopi Sachet,sachet,2026-06-22,113
+KPI-SCT,Kopi Sachet,sachet,2026-06-29,99
+KPI-SCT,Kopi Sachet,sachet,2026-07-06,102
+KPI-SCT,Kopi Sachet,sachet,2026-07-13,112
+KPI-SCT,Kopi Sachet,sachet,2026-07-20,104
+KPI-SCT,Kopi Sachet,sachet,2026-07-27,110
+KPI-SCT,Kopi Sachet,sachet,2026-08-03,108
+KPI-SCT,Kopi Sachet,sachet,2026-08-10,109
+KPI-SCT,Kopi Sachet,sachet,2026-08-17,107
+KPI-SCT,Kopi Sachet,sachet,2026-08-24,114
+KPI-SCT,Kopi Sachet,sachet,2026-08-31,106
+KPI-SCT,Kopi Sachet,sachet,2026-09-07,114
+KPI-SCT,Kopi Sachet,sachet,2026-09-14,105
+KPI-SCT,Kopi Sachet,sachet,2026-09-21,104
+KPI-SCT,Kopi Sachet,sachet,2026-09-28,102
+KPI-SCT,Kopi Sachet,sachet,2026-10-05,104
+KPI-SCT,Kopi Sachet,sachet,2026-10-12,102
