@@ -4,6 +4,7 @@ import pytest
 
 from trend_moment import (
     forecast_next_week,
+    main,
     read_sales,
     search_products,
     seasonal_indices,
@@ -130,3 +131,28 @@ def test_cari_produk_berdasarkan_sku():
 
 def test_cari_produk_tidak_ditemukan():
     assert search_products(RESULTS, "sabun") == []
+
+
+def test_main_menulis_hasil_prediksi_terurut(tmp_path):
+    source = write_csv(tmp_path, (
+        "AIR,Air Mineral,botol,2026-01-05,10\n"
+        "AIR,Air Mineral,botol,2026-01-12,12\n"
+        "MIE,Mi Instan,bungkus,2026-01-05,40\n"
+        "MIE,Mi Instan,bungkus,2026-01-12,44\n"
+    ))
+    output = tmp_path / "hasil.csv"
+
+    exit_code = main([str(source), str(output)])
+
+    lines = output.read_text(encoding="utf-8").splitlines()
+    assert exit_code == 0
+    assert lines[0] == "sku,name,week_start,x,a,b,trend,seasonal_index,forecast"
+    assert lines[1].startswith("MIE,Mi Instan,2026-01-19,2,")
+    assert lines[1].endswith(",48.0000")
+    assert lines[2].startswith("AIR,")
+
+
+def test_main_file_tidak_ada_memberi_pesan_dan_kode_keluar_1(tmp_path, capsys):
+    exit_code = main([str(tmp_path / "tidak-ada.csv"), str(tmp_path / "hasil.csv")])
+    assert exit_code == 1
+    assert "tidak ditemukan" in capsys.readouterr().err
