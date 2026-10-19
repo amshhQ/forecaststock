@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  python:
+    name: PyTest (script Trend Moment)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scripts/forecast
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -v
