@@ -1,7 +1,7 @@
 """Prediksi penjualan mingguan dengan metode Trend Moment."""
 
 import csv
-from datetime import date
+from datetime import date, timedelta
 
 
 def read_sales(path):
@@ -53,3 +53,60 @@ def trend_coefficients(values):
     b = (n * sum_xy - sum_x * sum_y) / (n * sum_x2 - sum_x * sum_x)
     a = (sum_y - b * sum_x) / n
     return a, b
+
+
+MIN_WEEKS_FOR_SEASON = 52
+
+
+def seasonal_indices(weeks):
+    """Indeks bulan = rata-rata penjualan mingguan bulan itu ÷ rata-rata seluruh data.
+
+    Kalau data belum 52 minggu, hasilnya kosong (indeks musim tidak dipakai).
+    """
+    if len(weeks) < MIN_WEEKS_FOR_SEASON:
+        return {}
+
+    totals = {}
+    counts = {}
+    grand_total = 0
+    for week_start, quantity in weeks:
+        month = week_start.month
+        totals[month] = totals.get(month, 0) + quantity
+        counts[month] = counts.get(month, 0) + 1
+        grand_total += quantity
+
+    overall_average = grand_total / len(weeks)
+    if overall_average == 0:
+        return {}
+
+    indices = {}
+    for month in totals:
+        indices[month] = (totals[month] / counts[month]) / overall_average
+    return indices
+
+
+def forecast_next_week(weeks):
+    """Prediksi minggu depan = tren × indeks musim bulannya, minimal 0."""
+    quantities = [quantity for _, quantity in weeks]
+    a, b = trend_coefficients(quantities)
+
+    x = len(weeks)
+    week_start = weeks[-1][0] + timedelta(weeks=1)
+    trend = a + b * x
+
+    indices = seasonal_indices(weeks)
+    seasonal_index = indices.get(week_start.month, 1.0) if indices else 1.0
+
+    forecast = trend * seasonal_index
+    if forecast < 0:
+        forecast = 0
+
+    return {
+        "week_start": week_start,
+        "x": x,
+        "a": a,
+        "b": b,
+        "trend": trend,
+        "seasonal_index": seasonal_index,
+        "forecast": forecast,
+    }
