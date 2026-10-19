@@ -5,7 +5,9 @@ import pytest
 from trend_moment import (
     forecast_next_week,
     read_sales,
+    search_products,
     seasonal_indices,
+    sort_by_forecast,
     trend_coefficients,
 )
 
@@ -103,3 +105,28 @@ def test_prediksi_tidak_pernah_negatif():
     result = forecast_next_week(make_weeks(date(2026, 1, 5), [30, 15, 0]))
     assert result["trend"] == pytest.approx(-15)
     assert result["forecast"] == 0
+
+
+RESULTS = [
+    {"sku": "AIR", "name": "Air Mineral", "forecast": 5},
+    {"sku": "MIE", "name": "Mi Instan", "forecast": 9},
+    {"sku": "KPI", "name": "Kopi Sachet", "forecast": 7},
+]
+
+
+def test_urut_dari_prediksi_tertinggi_tanpa_mengubah_data_asli():
+    ranked = sort_by_forecast(RESULTS)
+    assert [r["sku"] for r in ranked] == ["MIE", "KPI", "AIR"]
+    assert [r["sku"] for r in RESULTS] == ["AIR", "MIE", "KPI"]
+
+
+def test_cari_produk_berdasarkan_nama_tanpa_peduli_huruf_besar():
+    assert [r["sku"] for r in search_products(RESULTS, "mineral")] == ["AIR"]
+
+
+def test_cari_produk_berdasarkan_sku():
+    assert [r["sku"] for r in search_products(RESULTS, "kpi")] == ["KPI"]
+
+
+def test_cari_produk_tidak_ditemukan():
+    assert search_products(RESULTS, "sabun") == []
