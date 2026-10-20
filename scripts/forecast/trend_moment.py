@@ -113,6 +113,33 @@ def forecast_next_week(weeks):
     }
 
 
+BACKTEST_WEEKS = 8
+
+
+def backtest(weeks, holdout=BACKTEST_WEEKS):
+    """Uji mundur: tiap minggu uji diprediksi hanya dari data sebelumnya.
+
+    MAPE = rata-rata |asli - prediksi| / asli × 100%. Minggu dengan penjualan 0
+    tidak ikut dihitung karena tidak bisa dibagi. Butuh data lebih dari holdout + 1.
+    """
+    if len(weeks) < holdout + 2:
+        return None
+
+    rows = []
+    errors = []
+    for i in range(len(weeks) - holdout, len(weeks)):
+        week_start, actual = weeks[i]
+        forecast = forecast_next_week(weeks[:i])["forecast"]
+        error_percent = None
+        if actual > 0:
+            error_percent = abs(actual - forecast) / actual * 100
+            errors.append(error_percent)
+        rows.append({"week_start": week_start, "actual": actual, "forecast": forecast, "error_percent": error_percent})
+
+    mape = sum(errors) / len(errors) if errors else None
+    return {"weeks": holdout, "rows": rows, "mape": mape}
+
+
 def sort_by_forecast(results):
     """Urutkan dari prediksi tertinggi pakai insertion sort, O(n²).
 
@@ -140,16 +167,23 @@ def search_products(results, keyword):
 
 
 def forecast_all(products):
+    """Prediksi semua produk. Produk dengan data kurang dari 2 minggu dilewati."""
     results = []
+    skipped = []
     for sku, product in products.items():
+        if len(product["weeks"]) < 2:
+            skipped.append(sku)
+            continue
         result = forecast_next_week(product["weeks"])
         result["sku"] = sku
         result["name"] = product["name"]
+        accuracy = backtest(product["weeks"])
+        result["mape"] = accuracy["mape"] if accuracy else None
         results.append(result)
-    return results
+    return results, skipped
 
 
-OUTPUT_COLUMNS = ["sku", "name", "week_start", "x", "a", "b", "trend", "seasonal_index", "forecast"]
+OUTPUT_COLUMNS = ["sku", "name", "week_start", "x", "a", "b", "trend", "seasonal_index", "forecast", "mape"]
 
 
 def write_results(path, results):
@@ -162,6 +196,7 @@ def write_results(path, results):
                 r["sku"], r["name"], r["week_start"].isoformat(), r["x"],
                 f"{r['a']:.4f}", f"{r['b']:.4f}", f"{r['trend']:.4f}",
                 f"{r['seasonal_index']:.4f}", f"{r['forecast']:.4f}",
+                "" if r.get("mape") is None else f"{r['mape']:.4f}",
             ])
 
 
@@ -172,7 +207,8 @@ def main(argv):
 
     try:
         products = read_sales(source)
-        results = sort_by_forecast(forecast_all(products))
+        results, skipped = forecast_all(products)
+        results = sort_by_forecast(results)
         write_results(output, results)
     except FileNotFoundError:
         print(f"File {source} tidak ditemukan", file=sys.stderr)
@@ -181,9 +217,12 @@ def main(argv):
         print(f"Gagal menghitung: {error}", file=sys.stderr)
         return 1
 
-    print(f"{'SKU':<10}{'Produk':<22}{'Minggu':<12}{'Prediksi':>10}")
+    print(f"{'SKU':<10}{'Produk':<26}{'Minggu':<12}{'Prediksi':>10}{'MAPE':>9}")
     for r in results:
-        print(f"{r['sku']:<10}{r['name']:<22}{r['week_start'].isoformat():<12}{r['forecast']:>10.2f}")
+        mape = "-" if r.get("mape") is None else f"{r['mape']:.2f}%"
+        print(f"{r['sku']:<10}{r['name']:<26}{r['week_start'].isoformat():<12}{r['forecast']:>10.2f}{mape:>9}")
+    if skipped:
+        print(f"\nDilewati karena data kurang dari 2 minggu: {', '.join(skipped)}")
     print(f"\nHasil lengkap ditulis ke {output}")
     return 0
 

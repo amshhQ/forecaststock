@@ -1,11 +1,24 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { RouterProvider } from 'react-router'
+import { Toaster } from 'sonner'
 import './index.css'
+import { router } from './router'
+
+const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <main className="flex min-h-screen items-center justify-center bg-stone-50">
-      <h1 className="text-2xl font-semibold text-stone-900">ForecastStock</h1>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <Toaster
+        position="top-center"
+        richColors
+        closeButton
+        containerAriaLabel="Notifikasi"
+        toastOptions={{ closeButtonAriaLabel: 'Tutup notifikasi' }}
+      />
+    </QueryClientProvider>
   </StrictMode>,
 )

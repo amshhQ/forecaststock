@@ -14,3 +14,7 @@ Thumbs.db
 
 # Hasil default script forecast (bisa dibuat ulang)
 scripts/forecast/forecast_result.csv
+.coverage
+
+# Dokumen SDLC disimpan terpisah, dilampirkan di laporan
+docs/
