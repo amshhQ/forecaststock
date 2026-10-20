@@ -3,6 +3,7 @@ from datetime import date, timedelta
 import pytest
 
 from trend_moment import (
+    backtest,
     forecast_next_week,
     main,
     read_sales,
@@ -146,9 +147,9 @@ def test_main_menulis_hasil_prediksi_terurut(tmp_path):
 
     lines = output.read_text(encoding="utf-8").splitlines()
     assert exit_code == 0
-    assert lines[0] == "sku,name,week_start,x,a,b,trend,seasonal_index,forecast"
+    assert lines[0] == "sku,name,week_start,x,a,b,trend,seasonal_index,forecast,mape"
     assert lines[1].startswith("MIE,Mi Instan,2026-01-19,2,")
-    assert lines[1].endswith(",48.0000")
+    assert lines[1].endswith(",48.0000,")
     assert lines[2].startswith("AIR,")
 
 
@@ -156,3 +157,52 @@ def test_main_file_tidak_ada_memberi_pesan_dan_kode_keluar_1(tmp_path, capsys):
     exit_code = main([str(tmp_path / "tidak-ada.csv"), str(tmp_path / "hasil.csv")])
     assert exit_code == 1
     assert "tidak ditemukan" in capsys.readouterr().err
+
+
+def test_indeks_musim_kosong_kalau_semua_penjualan_nol():
+    assert seasonal_indices(make_weeks(date(2025, 1, 6), [0] * 52)) == {}
+
+
+def test_main_data_rusak_memberi_pesan_dan_kode_keluar_1(tmp_path, capsys):
+    source = write_csv(tmp_path, "AIR,Air Mineral,botol,2026-01-05,banyak\n")
+    exit_code = main([str(source), str(tmp_path / "hasil.csv")])
+    assert exit_code == 1
+    assert "Gagal menghitung" in capsys.readouterr().err
+
+
+def test_uji_mundur_sesuai_hitungan_manual():
+    result = backtest(make_weeks(date(2026, 1, 5), [5, 7, 6, 10, 9]), 2)
+    assert result["weeks"] == 2
+    assert result["rows"][0]["week_start"] == date(2026, 1, 26)
+    assert result["rows"][0]["forecast"] == pytest.approx(7)
+    assert result["rows"][0]["error_percent"] == pytest.approx(30)
+    assert result["rows"][1]["forecast"] == pytest.approx(10.5)
+    assert result["rows"][1]["error_percent"] == pytest.approx(16.6667, abs=1e-4)
+    assert result["mape"] == pytest.approx(23.3333, abs=1e-4)
+
+
+def test_uji_mundur_butuh_data_lebih_dari_minggu_uji():
+    assert backtest(make_weeks(date(2026, 1, 5), [5, 7, 6, 10, 9]), 4) is None
+
+
+def test_uji_mundur_melewati_minggu_tanpa_penjualan():
+    result = backtest(make_weeks(date(2026, 1, 5), [4, 4, 0]), 1)
+    assert result["rows"][0]["error_percent"] is None
+    assert result["mape"] is None
+
+
+def test_produk_dengan_data_kurang_dari_dua_minggu_dilewati(tmp_path, capsys):
+    source = write_csv(tmp_path, (
+        "AIR,Air Mineral,botol,2026-01-05,10\n"
+        "AIR,Air Mineral,botol,2026-01-12,12\n"
+        "TEH,Teh Botol,botol,2026-01-12,7\n"
+    ))
+    output = tmp_path / "hasil.csv"
+
+    exit_code = main([str(source), str(output)])
+
+    lines = output.read_text(encoding="utf-8").splitlines()
+    assert exit_code == 0
+    assert len(lines) == 2
+    assert lines[1].startswith("AIR,")
+    assert "TEH" in capsys.readouterr().out
