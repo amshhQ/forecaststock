@@ -106,7 +106,7 @@ export default function Layout() {
 
           {MENU.map((group) => (
             <div key={group.label} className="mt-5">
-              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-stone-400">{group.label}</p>
+              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-stone-500">{group.label}</p>
               <ul className="space-y-0.5">
                 {group.items.map((item) => (
                   <li key={item.to}>
