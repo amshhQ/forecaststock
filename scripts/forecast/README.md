@@ -14,9 +14,9 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 |---|---|
 | `trend_moment.py` | Perhitungan: baca CSV, koefisien a & b, indeks musim, prediksi minggu depan, sorting, searching |
 | `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu (bukan data asli, seed tetap) |
-| `sample_sales.csv` | Data simulasi: 6 produk × 104 minggu (21 Okt 2024 – 12 Okt 2026) |
+| `sample_sales.csv` | Data simulasi: 11 produk dengan kondisi berbeda-beda, sampai 104 minggu (21 Okt 2024 sampai 12 Okt 2026) |
 | `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv`, patokan untuk aplikasi |
-| `tests/test_trend_moment.py` | 17 unit test (ditulis dengan TDD, lihat riwayat commit) |
+| `tests/test_trend_moment.py` | 19 unit test (ditulis dengan TDD, lihat riwayat commit) |
 
 ## Menjalankan
 
@@ -35,7 +35,8 @@ Format CSV masukan: `sku,name,unit,week_start,quantity` (`week_start` = tanggal 
 
 1. Tren: Y = a + bX, X = 0, 1, 2, … dari ΣY = n·a + b·ΣX dan ΣXY = a·ΣX + b·ΣX².
 2. Indeks musim bulan m = rata-rata penjualan mingguan bulan m ÷ rata-rata mingguan seluruh data (hanya jika ≥ 52 minggu).
-3. Prediksi minggu depan = (a + b·n) × indeks musim bulan minggu tersebut; tidak pernah negatif.
+3. Prediksi minggu depan = (a + b·n) × indeks musim bulan minggu itu; tidak pernah negatif.
+4. Akurasi (MAPE): 8 minggu terakhir diprediksi satu per satu hanya dari data sebelumnya, lalu MAPE = rata-rata |asli − prediksi| ÷ asli × 100%. Minggu dengan penjualan 0 dilewati.
 
 ## Kompleksitas
 
@@ -45,3 +46,4 @@ Format CSV masukan: `sku,name,unit,week_start,quantity` (`week_start` = tanggal 
 | `seasonal_indices` | O(n) | Satu kali loop + 12 bulan |
 | `sort_by_forecast` | O(p²) | Insertion sort atas p produk (jumlah produk toko kecil) |
 | `search_products` | O(p) | Linear search |
+| `backtest` | O(h·n) | h = 8 minggu uji, tiap minggu menghitung ulang tren dan indeks musim |
