@@ -26,7 +26,7 @@ class ScenarioCategoryTest extends TestCase
         $product = $this->user->products()->create(['sku' => $sku, 'name' => $sku, 'unit' => 'pcs', 'category_id' => $categoryId]);
         $start = Carbon::parse('2026-09-07');
         foreach ([10, 10, 10, 10] as $i => $quantity) {
-            $product->sales()->create(['week_start' => $start->copy()->addWeeks($i), 'quantity' => $quantity]);
+            $product->sales()->create(['sale_date' => $start->copy()->addWeeks($i), 'quantity' => $quantity]);
         }
     }
 

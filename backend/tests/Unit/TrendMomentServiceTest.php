@@ -122,8 +122,14 @@ class TrendMomentServiceTest extends TestCase
         $dir = dirname(__DIR__, 3).'/scripts/forecast';
         $weeksBySku = [];
         foreach ($this->readCsv("$dir/sample_sales.csv") as $row) {
-            $weeksBySku[$row['sku']][] = [$row['week_start'], (int) $row['quantity']];
+            $monday = CarbonImmutable::parse($row['date'])->startOfWeek(CarbonImmutable::MONDAY)->toDateString();
+            $weeksBySku[$row['sku']][$monday] = ($weeksBySku[$row['sku']][$monday] ?? 0) + (int) $row['quantity'];
         }
+        $weeksBySku = array_map(function (array $totals) {
+            ksort($totals);
+
+            return array_map(null, array_keys($totals), array_values($totals));
+        }, $weeksBySku);
 
         $expectedRows = $this->readCsv("$dir/expected_forecast.csv");
         $this->assertCount(count(array_filter($weeksBySku, fn ($weeks) => count($weeks) >= 2)), $expectedRows);

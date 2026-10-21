@@ -38,28 +38,28 @@ class BoundaryValueTest extends TestCase
     #[DataProvider('quantities')]
     public function test_batas_jumlah_penjualan(int $quantity, int $status): void
     {
-        $product = $this->user->products()->create(['sku' => 'A', 'name' => 'Barang A', 'unit' => 'pcs']);
+        $product = $this->user->products()->create(['sku' => 'A', 'name' => 'Barang A', 'unit' => 'pcs', 'current_stock' => SaleController::MAX_QUANTITY + 1]);
 
-        $this->postJson('/api/sales', ['product_id' => $product->id, 'week_start' => '2026-10-12', 'quantity' => $quantity])
+        $this->postJson('/api/sales', ['product_id' => $product->id, 'sale_date' => '2026-10-12', 'quantity' => $quantity])
             ->assertStatus($status);
     }
 
-    public static function weeks(): array
+    public static function saleDates(): array
     {
         return [
-            'Senin minggu lalu' => ['2026-10-12', 201],
-            'Senin minggu ini (belum selesai)' => ['2026-10-19', 422],
-            'Senin minggu depan (belum terjadi)' => ['2026-10-26', 422],
-            'bukan Senin' => ['2026-10-13', 422],
+            'Selasa minggu lalu' => ['2026-10-13', 201],
+            'kemarin' => ['2026-10-20', 201],
+            'hari ini (batas)' => ['2026-10-21', 201],
+            'besok (belum terjadi)' => ['2026-10-22', 422],
         ];
     }
 
-    #[DataProvider('weeks')]
-    public function test_batas_tanggal_awal_minggu(string $weekStart, int $status): void
+    #[DataProvider('saleDates')]
+    public function test_batas_tanggal_penjualan(string $date, int $status): void
     {
-        $product = $this->user->products()->create(['sku' => 'A', 'name' => 'Barang A', 'unit' => 'pcs']);
+        $product = $this->user->products()->create(['sku' => 'A', 'name' => 'Barang A', 'unit' => 'pcs', 'current_stock' => 100]);
 
-        $this->postJson('/api/sales', ['product_id' => $product->id, 'week_start' => $weekStart, 'quantity' => 5])
+        $this->postJson('/api/sales', ['product_id' => $product->id, 'sale_date' => $date, 'quantity' => 5])
             ->assertStatus($status);
     }
 
@@ -105,7 +105,7 @@ class BoundaryValueTest extends TestCase
             $product->sales()->delete();
             $start = Carbon::parse('2025-10-20');
             for ($i = 0; $i < $count; $i++) {
-                $product->sales()->create(['week_start' => $start->copy()->addWeeks($i), 'quantity' => $start->copy()->addWeeks($i)->month * 5]);
+                $product->sales()->create(['sale_date' => $start->copy()->addWeeks($i), 'quantity' => $start->copy()->addWeeks($i)->month * 5]);
             }
 
             return $this->getJson("/api/forecasts/{$product->id}")->assertOk()->json();
