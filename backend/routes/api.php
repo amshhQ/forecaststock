@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ForecastController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ScenarioController;
+use App\Http\Controllers\Api\StockMovementController;
 use App\Http\Controllers\Api\StoreController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('categories', CategoryController::class)->except('show')->parameters(['categories' => 'id']);
     Route::apiResource('products', ProductController::class)->parameters(['products' => 'id']);
+    Route::get('/products/{id}/movements', [StockMovementController::class, 'index']);
+    Route::post('/products/{id}/movements', [StockMovementController::class, 'store']);
     Route::apiResource('scenarios', ScenarioController::class)->except('show')->parameters(['scenarios' => 'id']);
 
     Route::get('/sales', [SaleController::class, 'index']);

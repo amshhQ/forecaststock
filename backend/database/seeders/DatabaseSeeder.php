@@ -25,8 +25,16 @@ class DatabaseSeeder extends Seeder
         'KPI-SCT' => ['Makanan & Minuman', 400, 25],
         'ESK-CUP' => ['Makanan & Minuman', 30, 5],
         'SKM-370' => ['Makanan & Minuman', 10, 5],
-        'TEH-BTL' => ['Makanan & Minuman', 24, 6],
+        'TEH-BTL' => ['Makanan & Minuman', 5, 6],
         'SBN-CP' => ['Kebutuhan Rumah Tangga', 45, 10],
+    ];
+
+    private const STOCK_HISTORY = [
+        'TLR-1KG' => [
+            ['awal', 20, '2026-10-12', null],
+            ['masuk', 8, '2026-10-15', 'Kiriman pemasok'],
+            ['rusak', -3, '2026-10-16', 'Telur pecah'],
+        ],
     ];
 
     private const SCENARIOS = [
@@ -74,13 +82,21 @@ class DatabaseSeeder extends Seeder
                 }
                 $sales[] = [
                     'product_id' => $products[$sku]->id,
-                    'week_start' => $row['week_start'],
+                    'sale_date' => $row['date'],
                     'quantity' => (int) $row['quantity'],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
             }
-            DB::table('sales')->insert($sales);
+            foreach (array_chunk($sales, 500) as $chunk) {
+                DB::table('sales')->insert($chunk);
+            }
+
+            foreach ($products as $sku => $product) {
+                foreach (self::STOCK_HISTORY[$sku] ?? [['awal', $product->current_stock, '2026-10-12', null]] as [$type, $quantity, $date, $note]) {
+                    $product->movements()->create(['type' => $type, 'quantity' => $quantity, 'moved_on' => $date, 'note' => $note]);
+                }
+            }
 
             foreach (self::SCENARIOS as [$name, $percent, $description]) {
                 $user->scenarios()->create(['name' => $name, 'adjustment_percent' => $percent, 'description' => $description]);
@@ -88,7 +104,11 @@ class DatabaseSeeder extends Seeder
         });
     }
 
-    /** @return list<array<string, string>> */
+    /**
+     * Data demo dibaca dari CSV yang sama dengan script Python, supaya hasil prediksinya bisa dicocokkan.
+     *
+     * @return list<array<string, string>>
+     */
     private function readSales(): array
     {
         $file = fopen(database_path('data/sample_sales.csv'), 'r');

@@ -30,6 +30,7 @@ class TrendMomentService
             $sumX2 += $x * $x;
         }
 
+        // Hasil eliminasi dua persamaan Trend Moment: ΣY = n·a + b·ΣX dan ΣXY = a·ΣX + b·ΣX².
         $b = ($n * $sumXY - $sumX * $sumY) / ($n * $sumX2 - $sumX * $sumX);
         $a = ($sumY - $b * $sumX) / $n;
 
@@ -42,6 +43,7 @@ class TrendMomentService
      */
     public function seasonalIndices(array $weeks): array
     {
+        // Indeks musim baru adil kalau setiap bulan sudah pernah muncul, jadi butuh minimal setahun data.
         if (count($weeks) < self::MIN_WEEKS_FOR_SEASON) {
             return [];
         }
@@ -56,6 +58,7 @@ class TrendMomentService
         }
 
         $overallAverage = $grandTotal / count($weeks);
+        // Barang yang tidak pernah laku tidak punya pola musim, sekaligus mencegah pembagian dengan nol.
         if ($overallAverage == 0) {
             return [];
         }
@@ -76,6 +79,7 @@ class TrendMomentService
     {
         [$a, $b] = $this->coefficients(array_column($weeks, 1));
 
+        // X dimulai dari 0, jadi minggu depan punya X sama dengan jumlah minggu yang sudah ada.
         $x = count($weeks);
         $weekStart = CarbonImmutable::parse(end($weeks)[0])->addWeek();
         $trend = $a + $b * $x;
@@ -107,8 +111,10 @@ class TrendMomentService
         $rows = $errors = [];
         for ($i = count($weeks) - $holdout; $i < count($weeks); $i++) {
             [$weekStart, $actual] = $weeks[$i];
+            // Minggu uji diprediksi hanya dari data sebelumnya, seolah minggu itu belum terjadi.
             $forecast = $this->forecastNextWeek(array_slice($weeks, 0, $i))['forecast'];
             $errorPercent = null;
+            // Minggu tanpa penjualan dilewati karena tidak bisa dipakai sebagai pembagi.
             if ($actual > 0) {
                 $errorPercent = abs($actual - $forecast) / $actual * 100;
                 $errors[] = $errorPercent;

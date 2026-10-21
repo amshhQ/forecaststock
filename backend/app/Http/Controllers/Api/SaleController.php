@@ -4,29 +4,33 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sale;
+use App\Services\StockLedger;
 use Carbon\CarbonImmutable;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class SaleController extends Controller
 {
     public const MAX_QUANTITY = 1000000;
 
+    public function __construct(private StockLedger $ledger) {}
+
     public function index(Request $request): JsonResponse
     {
         $request->validate([
             'product_id' => ['nullable', 'integer'],
-            'sort' => ['nullable', Rule::in(['week_start', 'quantity'])],
+            'sort' => ['nullable', Rule::in(['sale_date', 'quantity'])],
             'direction' => ['nullable', Rule::in(['asc', 'desc'])],
         ]);
 
         $query = Sale::query()
             ->whereIn('product_id', $request->user()->products()->select('id'))
             ->with('product:id,sku,name,unit')
-            ->orderBy($request->query('sort', 'week_start'), $request->query('direction', 'desc'))
+            ->orderBy($request->query('sort', 'sale_date'), $request->query('direction', 'desc'))
             ->orderBy('product_id');
 
         if ($productId = $request->query('product_id')) {
@@ -40,40 +44,45 @@ class SaleController extends Controller
     {
         $data = $request->validate([
             'product_id' => ['required', Rule::exists('products', 'id')->where('user_id', $request->user()->id)],
-            'week_start' => ['required', 'date_format:Y-m-d', $this->weekStartRule()],
+            'sale_date' => ['required', 'date_format:Y-m-d', $this->notFutureRule()],
             'quantity' => ['required', 'integer', 'min:0', 'max:'.self::MAX_QUANTITY],
         ]);
 
-        $sale = Sale::updateOrCreate(
-            ['product_id' => $data['product_id'], 'week_start' => $data['week_start']],
-            ['quantity' => $data['quantity']],
-        );
+        $product = $request->user()->products()->findOrFail($data['product_id']);
+        $sale = $this->ledger->recordSale($product, $data['sale_date'], $data['quantity']);
 
-        return response()->json($sale->load('product:id,sku,name,unit'), 201);
+        return response()->json($sale->load('product:id,sku,name,unit,current_stock'), 201);
     }
 
     public function destroy(Request $request, int $id): JsonResponse
     {
-        Sale::whereIn('product_id', $request->user()->products()->select('id'))->findOrFail($id)->delete();
+        $sale = Sale::whereIn('product_id', $request->user()->products()->select('id'))->findOrFail($id);
+        $this->ledger->deleteSale($sale);
 
         return response()->json(null, 204);
     }
 
     public function import(Request $request): JsonResponse
     {
-        $request->validate(['file' => ['required', 'file', 'mimes:csv,txt', 'max:1024']]);
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:csv,txt', 'max:1024'],
+            'reduce_stock' => ['nullable', 'boolean'],
+        ]);
+        $reduceStock = $request->boolean('reduce_stock');
 
-        $productIds = $request->user()->products()->pluck('id', 'sku')->all();
+        $products = $request->user()->products()->get()->keyBy('sku');
         $handle = fopen($request->file('file')->getRealPath(), 'r');
         $firstLine = (string) fgets($handle);
 
+        // Excel versi Indonesia menyimpan CSV dengan titik koma, jadi pemisahnya ditebak dari baris judul.
         $delimiter = substr_count($firstLine, ';') > substr_count($firstLine, ',') ? ';' : ',';
+        // \xEF\xBB\xBF adalah penanda BOM yang sering ikut di awal file dari Excel.
         $header = array_map(
             fn ($h) => strtolower(trim((string) $h, " \t\n\r\0\x0B\xEF\xBB\xBF")),
             str_getcsv($firstLine, $delimiter, escape: '')
         );
 
-        $missing = array_diff(['sku', 'week_start', 'quantity'], $header);
+        $missing = array_diff(['sku', 'date', 'quantity'], $header);
         if (trim($firstLine) === '' || $missing) {
             fclose($handle);
             $message = trim($firstLine) === ''
@@ -92,17 +101,19 @@ class SaleController extends Controller
                 continue;
             }
             $row = array_combine($header, array_slice(array_pad($values, count($header), null), 0, count($header)));
-            $error = $this->importRowError($row, $productIds);
+            // Baris yang salah dilewati dan dilaporkan nomornya, baris lain tetap disimpan.
+            $error = $this->importRowError($row, $products->keys()->all());
             if ($error) {
                 $errors[] = ['line' => $line, 'message' => $error];
 
                 continue;
             }
-            Sale::updateOrCreate(
-                ['product_id' => $productIds[trim($row['sku'])], 'week_start' => trim($row['week_start'])],
-                ['quantity' => (int) trim($row['quantity'])],
-            );
-            $imported++;
+            try {
+                $this->ledger->recordSale($products[trim($row['sku'])], trim($row['date']), (int) trim($row['quantity']), $reduceStock);
+                $imported++;
+            } catch (ValidationException $e) {
+                $errors[] = ['line' => $line, 'message' => rtrim($e->validator->errors()->first(), '.')];
+            }
         }
         fclose($handle);
 
@@ -113,31 +124,28 @@ class SaleController extends Controller
         return response()->json(['imported' => $imported, 'errors' => $errors]);
     }
 
-    /** @param  array<string, int>  $productIds */
-    private function importRowError(array $row, array $productIds): ?string
+    /** @param  list<string>  $skus */
+    private function importRowError(array $row, array $skus): ?string
     {
         $sku = trim((string) $row['sku']);
         if ($sku === '') {
             return 'SKU kosong';
         }
-        if (! isset($productIds[$sku])) {
+        if (! in_array($sku, $skus, true)) {
             return "SKU \"$sku\" belum terdaftar di daftar produk";
         }
 
-        $weekStart = trim((string) $row['week_start']);
+        $value = trim((string) $row['date']);
         try {
-            $date = CarbonImmutable::createFromFormat('!Y-m-d', $weekStart);
+            $date = CarbonImmutable::createFromFormat('!Y-m-d', $value);
         } catch (Throwable) {
             $date = false;
         }
-        if (! $date || $date->toDateString() !== $weekStart) {
+        if (! $date || $date->toDateString() !== $value) {
             return 'Tanggal harus berformat YYYY-MM-DD, misalnya 2026-10-12';
         }
-        if (! $date->isMonday()) {
-            return 'Tanggal awal minggu harus hari Senin';
-        }
-        if ($date->greaterThanOrEqualTo($this->currentMonday())) {
-            return 'Minggu ini belum selesai';
+        if ($date->greaterThan(CarbonImmutable::today())) {
+            return 'Tanggal belum terjadi';
         }
 
         $quantity = trim((string) $row['quantity']);
@@ -151,20 +159,12 @@ class SaleController extends Controller
         return null;
     }
 
-    private function weekStartRule(): Closure
+    private function notFutureRule(): Closure
     {
         return function (string $attribute, mixed $value, Closure $fail) {
-            $date = CarbonImmutable::parse($value);
-            if (! $date->isMonday()) {
-                $fail('Tanggal awal minggu harus hari Senin.');
-            } elseif ($date->greaterThanOrEqualTo($this->currentMonday())) {
-                $fail('Minggu ini belum selesai. Penjualannya dicatat mulai Senin depan.');
+            if (CarbonImmutable::parse($value)->greaterThan(CarbonImmutable::today())) {
+                $fail('Tanggal ini belum terjadi, penjualannya belum bisa dicatat.');
             }
         };
-    }
-
-    private function currentMonday(): CarbonImmutable
-    {
-        return CarbonImmutable::today()->startOfWeek(CarbonImmutable::MONDAY);
     }
 }
