@@ -7,8 +7,10 @@ Proyek semester 1, Fast Track Ilmu Komputer, Universitas Cakrawala.
 ## Fitur
 
 - Daftar akun toko dengan jenis usaha (warung, toko bangunan, apotek, dll.); kategori awal dan saran satuan menyesuaikan
-- Data produk, kategori, dan penjualan mingguan (input manual atau impor CSV)
-- Prediksi penjualan minggu depan per produk: tren (Y = a + bX) × indeks musim
+- Data produk, kategori, dan penjualan per tanggal yang bisa dicatat kapan saja (input manual atau impor CSV)
+- Stok berkurang otomatis saat penjualan dicatat; barang masuk, barang rusak, stok opname, dan riwayat stok per produk
+- Peringatan stok menipis di Dashboard
+- Prediksi penjualan minggu depan per produk dari penjualan yang dijumlah per minggu: tren (Y = a + bX) dikali indeks musim
 - Akurasi prediksi per produk: MAPE dari uji mundur 8 minggu terakhir
 - Grafik penjualan, garis tren, dan prediksi, beserta rincian hitungannya
 - Target stok, jumlah restock, dan status stok (perlu restock, aman, berlebih)
@@ -57,8 +59,8 @@ Kalau tampilan berantakan atau data tidak muncul (API 404), cek apakah ada serve
 ## Pengujian
 
 ```powershell
-cd backend; php artisan test                              # 72 test
-cd scripts/forecast; .venv\Scripts\python -m pytest -v    # 22 test
+cd backend; php artisan test                              # 85 test
+cd scripts/forecast; .venv\Scripts\python -m pytest -v    # 23 test
 cd frontend; npx oxlint src; npm run build
 ```
 
