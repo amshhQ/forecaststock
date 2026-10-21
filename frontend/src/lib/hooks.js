@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+// Pencarian menunggu pengguna berhenti mengetik, supaya API tidak dipanggil di setiap huruf.
 export function useDebounce(value, delay = 400) {
   const [debounced, setDebounced] = useState(value)
 

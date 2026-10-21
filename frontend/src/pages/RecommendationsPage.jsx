@@ -73,7 +73,7 @@ export default function RecommendationsPage() {
       {scenario && (
         <p className="mb-3 text-sm text-stone-600">
           Skenario aktif: <strong>{scenario.name}</strong> ({Number(scenario.adjustment_percent) > 0 ? '+' : ''}
-          {Number(scenario.adjustment_percent)}%) untuk {scenario.category_id ? 'produk di kategori yang dipilih' : 'semua produk'} · {totalRestock} produk perlu restock
+          {Number(scenario.adjustment_percent)}%) untuk {scenario.category_id ? 'produk di kategori yang dipilih' : 'semua produk'}. {totalRestock} produk perlu restock
         </p>
       )}
 
@@ -113,7 +113,7 @@ export default function RecommendationsPage() {
                 <td className={`${td} text-right`}>{formatNumber(r.product.current_stock)}</td>
                 <td className={`${td} text-right font-semibold`}>
                   {r.recommended_quantity === null ? (
-                    '–'
+                    '-'
                   ) : (
                     <>
                       {formatNumber(r.recommended_quantity)} <span className="font-normal text-stone-500">{r.product.unit}</span>

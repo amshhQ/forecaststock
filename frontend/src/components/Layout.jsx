@@ -17,7 +17,7 @@ const MENU = [
   },
   {
     label: 'Transaksi',
-    items: [{ to: '/penjualan', label: 'Penjualan Mingguan', icon: 'cart' }],
+    items: [{ to: '/penjualan', label: 'Penjualan', icon: 'cart' }],
   },
   {
     label: 'Analisis',

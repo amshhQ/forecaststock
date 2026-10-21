@@ -78,7 +78,7 @@ export default function ScenariosPage() {
                 <td className={`${td} font-medium`}>{s.name}</td>
                 <td className={`${td} text-right ${Number(s.adjustment_percent) < 0 ? 'text-red-700' : 'text-emerald-800'}`}>{percentText(s.adjustment_percent)}</td>
                 <td className={td}>{s.category ? `Kategori ${s.category.name}` : 'Semua produk'}</td>
-                <td className={`${td} min-w-56 whitespace-normal text-stone-600`}>{s.description ?? '–'}</td>
+                <td className={`${td} min-w-56 whitespace-normal text-stone-600`}>{s.description ?? '-'}</td>
                 <td className={`${td} text-right`}>
                   <Button variant="secondary" className="mr-2 px-2.5 py-1 text-xs" onClick={() => setEditing(s)}>
                     Ubah

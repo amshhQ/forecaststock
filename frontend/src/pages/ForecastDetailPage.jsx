@@ -49,8 +49,8 @@ export default function ForecastDetailPage() {
   if (!forecast) {
     return (
       <>
-        <PageHeader info={INFO} title={product.name} description={`SKU ${product.sku} · ${weeks} minggu data penjualan`} actions={back} />
-        <Empty title="Data penjualan belum cukup" action={<LinkButton to="/penjualan?form=input">Input penjualan</LinkButton>}>
+        <PageHeader info={INFO} title={product.name} description={`SKU ${product.sku}, ${weeks} minggu data penjualan lengkap`} actions={back} />
+        <Empty title="Data penjualan belum cukup" action={<LinkButton to="/penjualan?form=input">Catat penjualan</LinkButton>}>
           Trend Moment butuh minimal 2 minggu data. Produk ini baru punya {weeks} minggu.
         </Empty>
       </>
@@ -59,7 +59,7 @@ export default function ForecastDetailPage() {
 
   return (
     <>
-      <PageHeader info={INFO} title={product.name} description={`SKU ${product.sku} · ${weeks} minggu data penjualan`} actions={back} />
+      <PageHeader info={INFO} title={product.name} description={`SKU ${product.sku}, ${weeks} minggu data penjualan lengkap`} actions={back} />
 
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
         <Card>
@@ -72,7 +72,7 @@ export default function ForecastDetailPage() {
           <div className="flex items-center gap-1">
             <p className="text-sm text-stone-600">Stok saat ini / minimum</p>
             <InfoTip label="Asal angka stok">
-              Diketik pemilik toko di <InfoLink to={`/produk?form=${product.id}`}>Ubah produk</InfoLink>. Tidak berkurang otomatis saat penjualan dicatat.
+              Stok awal diisi saat produk dibuat, lalu berubah otomatis dari penjualan, barang masuk, barang rusak, dan stok opname. Riwayatnya ada di <InfoLink to={`/produk?stok=${product.id}`}>Produk & Stok, tombol Stok</InfoLink>.
             </InfoTip>
           </div>
           <p className="mt-1 text-3xl font-semibold text-stone-900">
@@ -94,7 +94,7 @@ export default function ForecastDetailPage() {
             <InfoTip label="Cara membaca grafik">
               <ul className="list-disc space-y-1 pl-4">
                 <li>
-                  <strong>Garis biru</strong>: penjualan asli per minggu, dari Penjualan Mingguan.
+                  <strong>Garis biru</strong>: penjualan asli per minggu, dari Penjualan.
                 </li>
                 <li>
                   <strong>Garis oranye putus-putus</strong>: garis tren Y = a + bX hasil Trend Moment.
@@ -179,10 +179,10 @@ export default function ForecastDetailPage() {
           <Row label="4. Nilai tren" value={`${forecast.a} + (${forecast.b} × ${weeks}) = ${formatNumber(forecast.trend)}`} />
           <Row label="5. Indeks musim bulan tersebut" value={weeks >= 52 ? forecast.seasonal_index : '1 (data < 52 minggu)'} />
           <Row label="6. Prediksi" value={`${formatNumber(forecast.trend)} × ${forecast.seasonal_index} = ${formatNumber(forecast.value)}`} />
-          <Row label="7. Target stok (dibulatkan ke atas)" value={`⌈${formatNumber(forecast.value)}⌉ + ${product.min_stock} = ${target}`} />
+          <Row label="7. Target stok (dibulatkan ke atas)" value={`${formatNumber(forecast.value)} dibulatkan ke atas menjadi ${target - product.min_stock}, ditambah ${product.min_stock} = ${target}`} />
           <Row label="8. Perlu ditambah" value={`${target} − ${product.current_stock} = ${shortage}${shortage < 0 ? ', jadi 0 (stok cukup)' : ''}`} />
         </dl>
-        <p className="mt-2 text-xs text-stone-500">Langkah 7–8 tanpa skenario. Pengaruh skenario dilihat di Rekomendasi Stok.</p>
+        <p className="mt-2 text-xs text-stone-500">Langkah 7 dan 8 tanpa skenario. Pengaruh skenario dilihat di Rekomendasi Stok.</p>
       </Card>
 
       {accuracy && (
@@ -197,7 +197,7 @@ export default function ForecastDetailPage() {
           <p className="mt-1 text-sm text-stone-700">
             MAPE{' '}
             <strong>
-              {accuracy.mape === null ? '–' : `${formatNumber(accuracy.mape)}% (${mapeLabel(accuracy.mape)})`}
+              {accuracy.mape === null ? '-' : `${formatNumber(accuracy.mape)}% (${mapeLabel(accuracy.mape)})`}
             </strong>
             {accuracy.mape !== null && <>: rata-rata prediksi meleset sekitar {formatNumber(accuracy.mape)}% dari penjualan asli.</>}
           </p>
@@ -217,7 +217,7 @@ export default function ForecastDetailPage() {
                     <td className={td}>{formatDate(row.week_start)}</td>
                     <td className={`${td} text-right`}>{formatNumber(row.actual)}</td>
                     <td className={`${td} text-right`}>{formatNumber(row.forecast)}</td>
-                    <td className={`${td} text-right`}>{row.error_percent === null ? '– (terjual 0)' : `${formatNumber(row.error_percent)}%`}</td>
+                    <td className={`${td} text-right`}>{row.error_percent === null ? '- (terjual 0)' : `${formatNumber(row.error_percent)}%`}</td>
                   </tr>
                 ))}
               </tbody>

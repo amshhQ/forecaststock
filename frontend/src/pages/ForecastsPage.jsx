@@ -90,19 +90,19 @@ export default function ForecastsPage() {
                 </td>
                 <td className={`${td} text-right`}>{r.weeks_of_data} minggu</td>
                 <td className={`${td} text-right`}>{formatNumber(r.forecast?.trend)}</td>
-                <td className={`${td} text-right`}>{r.forecast ? r.forecast.seasonal_index.toFixed(4) : '–'}</td>
+                <td className={`${td} text-right`}>{r.forecast ? r.forecast.seasonal_index.toFixed(4) : '-'}</td>
                 <td className={`${td} text-right font-semibold`}>
                   {r.forecast ? (
                     <>
                       {formatNumber(r.forecast.value)} <span className="font-normal text-stone-500">{r.product.unit}</span>
                     </>
                   ) : (
-                    '–'
+                    '-'
                   )}
                 </td>
                 <td className={`${td} text-right`}>
                   {r.accuracy?.mape === null || r.accuracy?.mape === undefined ? (
-                    '–'
+                    '-'
                   ) : (
                     <>
                       {formatNumber(r.accuracy.mape)}% <span className="text-xs text-stone-500">{mapeLabel(r.accuracy.mape)}</span>

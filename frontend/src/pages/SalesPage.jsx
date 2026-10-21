@@ -5,21 +5,25 @@ import { api } from '../api/client'
 import SaleFormModal from '../components/SaleForm'
 import SalesImportModal from '../components/SalesImport'
 import { Button, Empty, ErrorMessage, inputClass, LinkButton, Loading, PageHeader, SortHeader, Table, td, th } from '../components/ui'
-import { formatDate, formatNumber } from '../lib/format'
+import { currentMonday, formatDate, formatNumber, mondayOf } from '../lib/format'
 import { useSort } from '../lib/hooks'
 import { toast } from 'sonner'
 
 const INFO = {
-  from: ['Diisi lewat tombol Input penjualan untuk satu produk, atau Impor CSV untuk banyak data sekaligus.'],
+  from: ['Diisi lewat tombol Catat penjualan (kapan saja, per tanggal) atau Impor CSV untuk banyak data sekaligus.'],
   needs: ['Produknya sudah ada di Produk & Stok.'],
-  note: ['Prediksi butuh minimal 2 minggu data, dan pola musim bulanan baru dihitung setelah 52 minggu. Minggu yang belum selesai belum bisa dicatat.'],
+  how: ['Kolom Minggu prediksi menunjukkan penjualan itu dijumlah ke minggu yang mana. Prediksi memakai total per minggu.'],
+  note: [
+    'Prediksi butuh minimal 2 minggu data, dan pola musim bulanan baru dihitung setelah 52 minggu. Minggu yang sedang berjalan baru dihitung setelah minggunya selesai.',
+    'Mencatat penjualan mengurangi stok, dan menghapusnya mengembalikan stok.',
+  ],
 }
 
 export default function SalesPage() {
   const queryClient = useQueryClient()
   const [productId, setProductId] = useState('')
   const [page, setPage] = useState(1)
-  const [sort, toggleSort] = useSort('week_start', 'desc')
+  const [sort, toggleSort] = useSort('sale_date', 'desc')
   const [params, setParams] = useSearchParams()
   const form = params.get('form')
   const openForm = (value) => setParams({ form: value })
@@ -40,6 +44,8 @@ export default function SalesPage() {
       if (sales.data?.data.length === 1 && page > 1) setPage(page - 1)
       toast.success('Data penjualan dihapus.')
       queryClient.invalidateQueries({ queryKey: ['sales'] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['movements'] })
       queryClient.invalidateQueries({ queryKey: ['forecasts'] })
     },
   })
@@ -57,10 +63,10 @@ export default function SalesPage() {
       <PageHeader
         info={INFO}
         title="Penjualan"
-        description="Jumlah terjual per produk per minggu. Satu minggu dihitung mulai hari Senin."
+        description="Jumlah terjual per produk per tanggal. Untuk prediksi, penjualan dijumlah per minggu mulai hari Senin."
         actions={
           <>
-            <Button onClick={() => openForm('input')}>Input penjualan</Button>
+            <Button onClick={() => openForm('input')}>Catat penjualan</Button>
             <Button variant="secondary" onClick={() => openForm('impor')}>
               Impor CSV
             </Button>
@@ -102,7 +108,7 @@ export default function SalesPage() {
         ) : (
           <Empty
             title={productId ? 'Produk ini belum punya data penjualan' : 'Belum ada data penjualan'}
-            action={<Button onClick={() => openForm('input')}>Input penjualan</Button>}
+            action={<Button onClick={() => openForm('input')}>Catat penjualan</Button>}
           >
             Catat penjualan per minggu atau impor dari file CSV.
           </Empty>
@@ -112,7 +118,8 @@ export default function SalesPage() {
           <Table>
             <thead className="bg-stone-50">
               <tr>
-                <SortHeader label="Minggu mulai" column="week_start" sort={sort} onSort={changeSort} />
+                <SortHeader label="Tanggal" column="sale_date" sort={sort} onSort={changeSort} />
+                <th className={th}>Minggu prediksi</th>
                 <th className={th}>Produk</th>
                 <SortHeader label="Terjual" column="quantity" sort={sort} onSort={changeSort} align="right" />
                 <th className={th}>
@@ -123,7 +130,11 @@ export default function SalesPage() {
             <tbody className={`divide-y divide-stone-100 ${sales.isFetching ? 'opacity-60' : ''}`}>
               {data.data.map((s) => (
                 <tr key={s.id} className="hover:bg-stone-50/70">
-                  <td className={td}>{formatDate(s.week_start)}</td>
+                  <td className={td}>{formatDate(s.sale_date)}</td>
+                  <td className={`${td} text-stone-600`}>
+                    {formatDate(mondayOf(s.sale_date))}
+                    {mondayOf(s.sale_date) >= currentMonday() && <span className="ml-2 rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">belum dihitung</span>}
+                  </td>
                   <td className={td}>{s.product.name}</td>
                   <td className={`${td} text-right`}>
                     {formatNumber(s.quantity)} <span className="text-stone-500">{s.product.unit}</span>
@@ -134,7 +145,7 @@ export default function SalesPage() {
                       className="px-2.5 py-1 text-xs"
                       disabled={remove.isPending}
                       onClick={() => {
-                        if (window.confirm(`Hapus penjualan ${s.product.name} minggu ${formatDate(s.week_start)}?`)) remove.mutate(s)
+                        if (window.confirm(`Hapus penjualan ${s.product.name} tanggal ${formatDate(s.sale_date)}? Stok yang terpakai dikembalikan.`)) remove.mutate(s)
                       }}
                     >
                       Hapus
@@ -146,7 +157,7 @@ export default function SalesPage() {
           </Table>
           <nav className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm" aria-label="Halaman data">
             <span className="text-stone-600">
-              Halaman {data.current_page} dari {lastPage} · {formatNumber(data.total)} data
+              Halaman {data.current_page} dari {lastPage}, {formatNumber(data.total)} data
             </span>
             <div className="flex gap-2">
               <Button variant="secondary" disabled={page <= 1 || sales.isFetching} onClick={() => setPage(page - 1)}>
