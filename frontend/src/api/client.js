@@ -36,6 +36,7 @@ export async function api(path, { method = 'GET', body } = {}) {
     throw new ApiError('Tidak bisa terhubung ke server. Pastikan backend sudah dinyalakan.', 0)
   }
 
+  // Token tidak berlaku lagi: keluarkan pengguna dan beri tahu alasannya di halaman login.
   if (response.status === 401 && token) {
     useAuthStore.getState().expire()
     throw new ApiError('Sesi kamu sudah berakhir. Silakan login lagi.', 401)

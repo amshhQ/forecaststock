@@ -5,8 +5,13 @@ import sys
 from datetime import date, timedelta
 
 
+def week_monday(day):
+    """Tanggal Senin dari minggu tempat tanggal itu berada."""
+    return day - timedelta(days=day.weekday())
+
+
 def read_sales(path):
-    """Baca CSV penjualan dan kelompokkan per sku, urut per minggu.
+    """Baca CSV penjualan per tanggal, lalu jumlahkan per produk per minggu (Senin).
 
     Baris yang tidak valid memunculkan ValueError beserta nomor barisnya.
     """
@@ -15,7 +20,7 @@ def read_sales(path):
         reader = csv.DictReader(file)
         for line_number, row in enumerate(reader, start=2):
             try:
-                week_start = date.fromisoformat(row["week_start"].strip())
+                sale_date = date.fromisoformat(row["date"].strip())
                 quantity = int(row["quantity"].strip())
             except (ValueError, AttributeError, KeyError) as error:
                 raise ValueError(f"Data tidak valid di baris {line_number}: {error}") from error
@@ -24,11 +29,13 @@ def read_sales(path):
 
             sku = row["sku"].strip()
             if sku not in products:
-                products[sku] = {"name": row["name"].strip(), "unit": row["unit"].strip(), "weeks": []}
-            products[sku]["weeks"].append((week_start, quantity))
+                products[sku] = {"name": row["name"].strip(), "unit": row["unit"].strip(), "totals": {}}
+            monday = week_monday(sale_date)
+            totals = products[sku]["totals"]
+            totals[monday] = totals.get(monday, 0) + quantity
 
     for product in products.values():
-        product["weeks"].sort()
+        product["weeks"] = sorted(product.pop("totals").items())
     return products
 
 

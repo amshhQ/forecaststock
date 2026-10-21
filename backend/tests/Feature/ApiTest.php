@@ -127,34 +127,34 @@ class ApiTest extends TestCase
         $this->assertGreaterThanOrEqual($normal['recommended_quantity'], $naik['recommended_quantity']);
     }
 
-    public function test_tanggal_penjualan_harus_hari_senin(): void
+    public function test_penjualan_hari_ini_bisa_langsung_dicatat(): void
     {
         $demo = $this->demoUser();
         Sanctum::actingAs($demo);
 
         $this->postJson('/api/sales', [
-            'product_id' => $demo->products()->first()->id,
-            'week_start' => '2026-10-20',
+            'product_id' => $demo->products()->where('sku', 'KPI-SCT')->first()->id,
+            'sale_date' => '2026-10-21',
             'quantity' => 10,
-        ])->assertStatus(422)->assertJsonValidationErrors('week_start');
+        ])->assertCreated();
     }
 
     public function test_impor_csv_menyimpan_baris_valid_dan_melaporkan_baris_salah(): void
     {
         Sanctum::actingAs($this->demoUser());
 
-        $csv = "sku,week_start,quantity\n"
+        $csv = "sku,date,quantity\n"
             ."BRS-5KG,2026-10-12,50\n"
             ."TIDAK-ADA,2026-10-12,5\n"
             ."MIE-INS,2026-10-13,5\n"
             ."AIR-600,2026-10-12,abc\n"
-            ."MYK-1L,2026-10-19,5\n";
+            ."MYK-1L,2026-10-22,5\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('penjualan.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()
-            ->assertJson(['imported' => 1])
-            ->assertJsonCount(4, 'errors')
-            ->assertJsonPath('errors.3.message', 'Minggu ini belum selesai')
+            ->assertJson(['imported' => 2])
+            ->assertJsonCount(3, 'errors')
+            ->assertJsonPath('errors.2.message', 'Tanggal belum terjadi')
             ->assertJsonPath('errors.0.line', 3);
     }
 
@@ -169,16 +169,16 @@ class ApiTest extends TestCase
             ->assertJsonCount(5, 'top_forecasts');
     }
 
-    public function test_penjualan_minggu_yang_belum_terjadi_ditolak(): void
+    public function test_penjualan_tanggal_yang_belum_terjadi_ditolak(): void
     {
         $demo = $this->demoUser();
         Sanctum::actingAs($demo);
 
         $this->postJson('/api/sales', [
             'product_id' => $demo->products()->first()->id,
-            'week_start' => '2026-10-26',
+            'sale_date' => '2026-10-22',
             'quantity' => 10,
-        ])->assertStatus(422)->assertJsonValidationErrors('week_start');
+        ])->assertStatus(422)->assertJsonValidationErrors('sale_date');
     }
 
     public function test_pesan_validasi_berbahasa_indonesia(): void
@@ -194,7 +194,7 @@ class ApiTest extends TestCase
     {
         Sanctum::actingAs($this->demoUser());
 
-        $csv = "sku;week_start;quantity\nBRS-5KG;2026-10-12;50\n";
+        $csv = "sku;date;quantity\nBRS-5KG;2026-10-12;50\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('excel.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()
@@ -205,7 +205,7 @@ class ApiTest extends TestCase
     {
         Sanctum::actingAs($this->demoUser());
 
-        $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('kosong.csv', "sku,week_start,quantity\n")], ['Accept' => 'application/json'])
+        $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('kosong.csv', "sku,date,quantity\n")], ['Accept' => 'application/json'])
             ->assertStatus(422);
     }
 
@@ -233,8 +233,9 @@ class ApiTest extends TestCase
 
         $this->postJson('/api/demo/reset')->assertOk();
 
+        $rows = count(file(database_path('data/sample_sales.csv'), FILE_SKIP_EMPTY_LINES)) - 1;
         $this->assertSame(11, $demo->products()->count());
-        $this->assertSame(967, Sale::count());
+        $this->assertSame($rows, Sale::count());
     }
 
     public function test_reset_data_demo_ditolak_untuk_akun_biasa(): void

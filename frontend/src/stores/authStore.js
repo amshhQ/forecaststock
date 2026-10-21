@@ -11,6 +11,7 @@ export const useAuthStore = create(
       logout: () => set({ token: null, user: null, sessionExpired: false }),
       expire: () => set({ token: null, user: null, sessionExpired: true }),
     }),
+    // Yang disimpan di browser hanya token dan data akun, supaya tetap login setelah refresh.
     { name: 'forecaststock-auth', partialize: (state) => ({ token: state.token, user: state.user }) },
   ),
 )

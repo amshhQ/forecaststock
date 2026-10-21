@@ -3,15 +3,22 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { api } from '../api/client'
 import ProductFormModal from '../components/ProductForm'
+import StockModal from '../components/StockModal'
 import { Button, Empty, ErrorMessage, Loading, PageHeader, SearchInput, SortHeader, Table, td, th } from '../components/ui'
 import { formatNumber } from '../lib/format'
 import { useDebounce, useSort } from '../lib/hooks'
 import { toast } from 'sonner'
 
 const INFO = {
-  from: ['Diisi sendiri lewat tombol Tambah produk.'],
-  how: ['Perbarui stok saat ini lewat tombol Ubah setiap selesai menghitung barang di rak atau setelah barang dari pemasok datang. Stok tidak berkurang otomatis saat penjualan dicatat.'],
-  note: ['Stok minimum adalah cadangan yang selalu ingin disisakan.', 'Menghapus produk ikut menghapus riwayat penjualannya.'],
+  from: ['Diisi sendiri lewat tombol Tambah produk. Stok awal diisi saat produk dibuat.'],
+  how: [
+    'Tombol Stok untuk mencatat barang masuk, barang rusak atau hilang, dan stok opname, sekaligus melihat riwayat stok.',
+    'Penjualan yang dicatat langsung mengurangi stok.',
+  ],
+  note: [
+    'Tanda menipis muncul kalau stok sudah sama atau di bawah stok minimum.',
+    'Menghapus produk ikut menghapus riwayat penjualan dan riwayat stoknya.',
+  ],
 }
 
 export default function ProductsPage() {
@@ -21,6 +28,7 @@ export default function ProductsPage() {
   const [sort, toggleSort] = useSort('name')
   const [params, setParams] = useSearchParams()
   const openForm = (value) => setParams({ form: String(value) })
+  const openStock = (id) => setParams({ stok: String(id) })
   const closeForm = () => setParams({}, { replace: true })
 
   const query = new URLSearchParams({ q: keyword, sort: sort.key, direction: sort.direction })
@@ -89,6 +97,7 @@ export default function ProductsPage() {
                 <td className={`${td} font-medium`}>{p.name}</td>
                 <td className={`${td} text-stone-600`}>{p.category?.name ?? <span className="text-stone-400">Tanpa kategori</span>}</td>
                 <td className={`${td} text-right`}>
+                  {p.current_stock <= p.min_stock && <span className="mr-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900">menipis</span>}
                   {formatNumber(p.current_stock)} <span className="text-stone-500">{p.unit}</span>
                 </td>
                 <td className={`${td} text-right`}>{formatNumber(p.min_stock)}</td>
@@ -96,6 +105,9 @@ export default function ProductsPage() {
                   <Link to={`/prediksi/${p.id}`} className="mr-3 text-teal-700 hover:underline">
                     Prediksi
                   </Link>
+                  <Button className="mr-2 px-2.5 py-1 text-xs" onClick={() => openStock(p.id)}>
+                    Stok
+                  </Button>
                   <button type="button" onClick={() => openForm(p.id)} className="mr-3 text-teal-700 hover:underline">
                     Ubah
                   </button>
@@ -104,7 +116,7 @@ export default function ProductsPage() {
                     className="px-2.5 py-1 text-xs"
                     disabled={remove.isPending}
                     onClick={() => {
-                      if (window.confirm(`Hapus "${p.name}"? Riwayat penjualannya ikut terhapus.`)) remove.mutate(p)
+                      if (window.confirm(`Hapus "${p.name}"? Riwayat penjualan dan riwayat stoknya ikut terhapus.`)) remove.mutate(p)
                     }}
                   >
                     Hapus
@@ -117,6 +129,7 @@ export default function ProductsPage() {
       )}
 
       <ProductFormModal productId={params.get('form')} onClose={closeForm} />
+      <StockModal productId={params.get('stok')} onClose={closeForm} />
     </>
   )
 }

@@ -13,9 +13,9 @@ const STATUS_TILES = [
 ]
 
 const INFO = {
-  from: ['Semua angka dihitung otomatis dari data produk dan penjualan, tidak ada yang diketik manual.'],
+  from: ['Semua angka dihitung otomatis dari data produk, stok, dan penjualan, tidak ada yang diketik manual.'],
   needs: ['Produk butuh penjualan minimal 2 minggu. Kalau belum, statusnya Data kurang.'],
-  how: ['Klik nama produk untuk melihat grafik dan rincian hitungannya.'],
+  how: ['Klik nama produk untuk melihat grafik dan rincian hitungannya.', 'Peringatan stok menipis muncul kalau stok sudah sama atau di bawah stok minimum. Klik barangnya untuk mencatat barang masuk.'],
   note: ['Status di halaman ini dihitung tanpa skenario. Pengaruh skenario dilihat di Rekomendasi Stok.'],
 }
 
@@ -34,7 +34,7 @@ export default function DashboardPage() {
       <>
         <PageHeader title={`Halo, ${user?.name ?? ''}`} description="Belum ada data untuk diringkas." />
         <Empty title="Mulai dari menambah produk" action={<LinkButton to="/produk?form=baru">Tambah produk</LinkButton>}>
-          Urutannya: tambah produk, catat atau impor penjualan mingguan, lalu buka halaman Prediksi dan Rekomendasi Stok.
+          Urutannya: tambah produk, catat atau impor penjualan, lalu buka halaman Prediksi dan Rekomendasi Stok.
         </Empty>
       </>
     )
@@ -44,9 +44,27 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title={`Halo, ${user?.name ?? ''}`}
-        description={`${d.total_products} produk · penjualan terakhir tercatat minggu ${formatDate(d.last_week)}${nextWeek ? ` · prediksi untuk minggu ${formatDate(nextWeek)}` : ''}`}
+        description={`${d.total_products} produk. Penjualan lengkap terakhir minggu ${formatDate(d.last_week)}.${nextWeek ? ` Prediksi untuk minggu ${formatDate(nextWeek)}.` : ''}`}
         info={INFO}
       />
+
+      {d.low_stock.length > 0 && (
+        <section className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4" aria-labelledby="stok-menipis">
+          <h2 id="stok-menipis" className="font-semibold text-amber-900">
+            Peringatan stok menipis ({d.low_stock.length} barang)
+          </h2>
+          <p className="mt-0.5 text-sm text-amber-900">Stok sudah sama atau di bawah stok minimum. Klik barangnya untuk mencatat barang masuk.</p>
+          <ul className="mt-2 flex flex-wrap gap-2">
+            {d.low_stock.map((p) => (
+              <li key={p.id}>
+                <Link to={`/produk?stok=${p.id}`} className="inline-block rounded-lg bg-white px-3 py-1.5 text-sm text-stone-800 ring-1 ring-amber-200 hover:ring-amber-400">
+                  <span className="font-medium">{p.name}</span>: {formatNumber(p.current_stock)} {p.unit} (minimum {formatNumber(p.min_stock)})
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {STATUS_TILES.map(([key, label, note]) => (
@@ -66,7 +84,7 @@ export default function DashboardPage() {
           <div className="mb-2 flex items-center gap-1">
             <h2 className="font-semibold text-stone-800">Prediksi tertinggi minggu depan</h2>
             <InfoTip label="Asal data prediksi tertinggi">
-              5 produk dengan prediksi terbesar dari halaman <InfoLink to="/prediksi">Prediksi Trend Moment</InfoLink>. Prediksinya dihitung dari Penjualan Mingguan tiap produk.
+              5 produk dengan prediksi terbesar dari halaman <InfoLink to="/prediksi">Prediksi Trend Moment</InfoLink>. Prediksinya dihitung dari Penjualan tiap produk.
             </InfoTip>
           </div>
           {d.top_forecasts.length === 0 ? (
@@ -101,7 +119,7 @@ export default function DashboardPage() {
           <div className="mb-2 flex items-center gap-1">
             <h2 className="font-semibold text-stone-800">Perlu restock</h2>
             <InfoTip label="Asal data perlu restock" align="right">
-              Stok diambil dari <InfoLink to="/produk">Produk & Stok</InfoLink>. Jumlah tambah adalah target stok dikurangi stok saat ini. Setelah barang datang, perbarui stoknya supaya produk hilang dari daftar ini.
+              Stok diambil dari <InfoLink to="/produk">Produk & Stok</InfoLink>. Jumlah tambah adalah target stok dikurangi stok tercatat. Setelah barang datang, catat lewat tombol Stok (barang masuk) supaya produk hilang dari daftar ini.
             </InfoTip>
           </div>
           {d.needs_restock.length === 0 ? (

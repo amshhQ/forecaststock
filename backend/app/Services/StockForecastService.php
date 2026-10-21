@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use App\Models\Scenario;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 
 class StockForecastService
@@ -21,14 +22,33 @@ class StockForecastService
         return $products->map(fn (Product $product) => $this->forProduct($product, $scenario))->values()->all();
     }
 
+    /**
+     * Penjualan harian dijumlah per minggu (Senin). Minggu yang sedang berjalan belum dihitung.
+     *
+     * @return list<array{0: string, 1: int}>
+     */
+    public function weeklySales(Product $product): array
+    {
+        $currentMonday = CarbonImmutable::today()->startOfWeek(CarbonImmutable::MONDAY);
+        $totals = [];
+        foreach ($product->sales as $sale) {
+            $monday = CarbonImmutable::parse($sale->sale_date)->startOfWeek(CarbonImmutable::MONDAY);
+            // Angka minggu ini masih setengah, kalau ikut dihitung prediksinya jadi terlalu rendah.
+            if ($monday->greaterThanOrEqualTo($currentMonday)) {
+                continue;
+            }
+            $key = $monday->toDateString();
+            $totals[$key] = ($totals[$key] ?? 0) + $sale->quantity;
+        }
+        ksort($totals);
+
+        return array_map(fn ($week, $quantity) => [$week, $quantity], array_keys($totals), array_values($totals));
+    }
+
     /** @return array<string, mixed> */
     public function forProduct(Product $product, ?Scenario $scenario = null): array
     {
-        $weeks = $product->sales
-            ->sortBy('week_start')
-            ->map(fn ($sale) => [$sale->week_start->toDateString(), $sale->quantity])
-            ->values()
-            ->all();
+        $weeks = $this->weeklySales($product);
 
         $row = [
             'product' => [
@@ -86,6 +106,7 @@ class StockForecastService
 
     public function targetStock(float $adjustedForecast, int $minStock): int
     {
+        // Dibulatkan ke atas karena barang tidak bisa dibeli setengah.
         return (int) ceil($adjustedForecast) + $minStock;
     }
 
@@ -104,6 +125,7 @@ class StockForecastService
         if ($recommended > 0) {
             return 'perlu_restock';
         }
+        // Berlebih kalau stok di atas minimum cukup untuk lebih dari dua minggu penjualan.
         if ($currentStock - $minStock > self::OVERSTOCK_WEEKS * $adjustedForecast) {
             return 'berlebih';
         }

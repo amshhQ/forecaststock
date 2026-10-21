@@ -22,19 +22,17 @@ class ForecastController extends Controller
 
     public function show(Request $request, int $id): JsonResponse
     {
-        $product = $request->user()->products()
-            ->with(['sales' => fn ($q) => $q->orderBy('week_start')])
-            ->findOrFail($id);
+        $product = $request->user()->products()->with('sales')->findOrFail($id);
 
         $row = $this->forecasts->forProduct($product);
         $a = $row['forecast']['a'] ?? null;
         $b = $row['forecast']['b'] ?? null;
 
-        $row['history'] = $product->sales->values()->map(fn ($sale, $x) => [
-            'week_start' => $sale->week_start->toDateString(),
-            'quantity' => $sale->quantity,
+        $row['history'] = array_map(fn ($week, $x) => [
+            'week_start' => $week[0],
+            'quantity' => $week[1],
             'trend' => $a === null ? null : round($a + $b * $x, 2),
-        ]);
+        ], $weeks = $this->forecasts->weeklySales($product), array_keys($weeks));
 
         return response()->json($row);
     }
@@ -56,12 +54,13 @@ class ForecastController extends Controller
 
     public function dashboard(Request $request): JsonResponse
     {
-        $rows = $this->forecasts->forProducts($this->productsWithSales($request));
+        $products = $this->productsWithSales($request);
+        $rows = $this->forecasts->forProducts($products);
         $withForecast = array_values(array_filter($rows, fn ($r) => $r['forecast'] !== null));
         usort($withForecast, fn ($x, $y) => $y['forecast']['value'] <=> $x['forecast']['value']);
 
         $statusCount = array_count_values(array_column($rows, 'status'));
-        $lastWeek = $request->user()->products()->join('sales', 'sales.product_id', '=', 'products.id')->max('sales.week_start');
+        $weeks = array_merge(...array_map(fn ($product) => array_column($this->forecasts->weeklySales($product), 0), $products->all()));
 
         return response()->json([
             'total_products' => count($rows),
@@ -71,16 +70,20 @@ class ForecastController extends Controller
                 'aman' => $statusCount['aman'] ?? 0,
                 'data_kurang' => $statusCount['data_kurang'] ?? 0,
             ],
-            'last_week' => $lastWeek,
+            'last_week' => $weeks ? max($weeks) : null,
             'top_forecasts' => array_slice($withForecast, 0, 5),
             'needs_restock' => array_values(array_filter($rows, fn ($r) => $r['status'] === 'perlu_restock')),
+            'low_stock' => $products
+                ->filter(fn ($p) => $p->current_stock <= $p->min_stock)
+                ->map(fn ($p) => $p->only(['id', 'sku', 'name', 'unit', 'current_stock', 'min_stock']))
+                ->values(),
         ]);
     }
 
     private function productsWithSales(Request $request)
     {
         return $request->user()->products()
-            ->with(['sales' => fn ($q) => $q->orderBy('week_start')])
+            ->with('sales')
             ->orderBy('name')
             ->get();
     }

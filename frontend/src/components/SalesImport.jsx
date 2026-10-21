@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { api } from '../api/client'
-import { lastFinishedMonday } from '../lib/format'
+import { todayDate } from '../lib/format'
 import { Button, ErrorMessage, Field, Modal } from './ui'
 
 const MAX_SIZE = 1024 * 1024
@@ -17,10 +17,13 @@ function checkFile(file) {
 
 const INFO = {
   how: [
-    'Kolom wajib: sku, week_start (tanggal Senin, format YYYY-MM-DD), dan quantity. File dari Excel versi Indonesia juga bisa dibaca.',
+    'Kolom wajib: sku, date (tanggal penjualan, format YYYY-MM-DD), dan quantity. File dari Excel versi Indonesia juga bisa dibaca.',
     'Cara paling mudah: unduh contoh CSV, ubah angkanya, lalu unggah.',
   ],
-  note: ['Baris yang benar langsung disimpan. Baris yang salah dilewati dan ditampilkan alasannya.'],
+  note: [
+    'Baris yang benar langsung disimpan. Baris yang salah dilewati dan ditampilkan alasannya.',
+    'Centang Kurangi stok kalau file berisi penjualan terbaru yang belum dicatat. Biarkan kosong untuk riwayat lama, karena stok sekarang sudah hasil hitung langsung.',
+  ],
 }
 
 export default function SalesImportModal({ open, onClose }) {
@@ -35,25 +38,29 @@ function SalesImport({ onClose }) {
   const queryClient = useQueryClient()
   const [file, setFile] = useState(null)
   const [fileError, setFileError] = useState(null)
+  const [reduceStock, setReduceStock] = useState(false)
   const products = useQuery({ queryKey: ['products', 'all'], queryFn: () => api('/products') })
 
   const upload = useMutation({
     mutationFn: () => {
       const body = new FormData()
       body.append('file', file)
+      body.append('reduce_stock', reduceStock ? '1' : '0')
       return api('/sales/import', { method: 'POST', body })
     },
     onSuccess: (result) => {
       toast.success(`${result.imported} baris berhasil diimpor.`)
       queryClient.invalidateQueries({ queryKey: ['sales'] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
       queryClient.invalidateQueries({ queryKey: ['forecasts'] })
+      queryClient.invalidateQueries({ queryKey: ['movements'] })
     },
   })
 
   function downloadExample() {
-    const week = lastFinishedMonday()
-    const lines = ['sku,week_start,quantity', ...(products.data ?? []).slice(0, 3).map((p, i) => `${p.sku},${week},${(i + 1) * 10}`)]
-    if (lines.length === 1) lines.push(`KODE-BARANG,${week},10`)
+    const day = todayDate()
+    const lines = ['sku,date,quantity', ...(products.data ?? []).slice(0, 3).map((p, i) => `${p.sku},${day},${(i + 1) * 2}`)]
+    if (lines.length === 1) lines.push(`KODE-BARANG,${day},2`)
     const url = URL.createObjectURL(new Blob([lines.join('\n') + '\n'], { type: 'text/csv' }))
     const link = document.createElement('a')
     link.href = url
@@ -86,6 +93,12 @@ function SalesImport({ onClose }) {
             }}
           />
         </Field>
+        <label className="flex items-start gap-2 text-sm text-stone-700">
+          <input type="checkbox" className="mt-0.5 h-4 w-4 accent-teal-700" checked={reduceStock} onChange={(e) => setReduceStock(e.target.checked)} />
+          <span>
+            <span className="font-medium">Kurangi stok</span> sesuai penjualan di file. Biarkan kosong kalau file berisi riwayat lama.
+          </span>
+        </label>
         <div className="flex flex-wrap justify-between gap-2">
           <Button variant="secondary" onClick={downloadExample} disabled={products.isPending}>
             Unduh contoh CSV

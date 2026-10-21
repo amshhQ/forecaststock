@@ -31,7 +31,7 @@ def test_data_kurang_dari_dua_minggu_ditolak():
         trend_coefficients([10])
 
 
-HEADER = "sku,name,unit,week_start,quantity\n"
+HEADER = "sku,name,unit,date,quantity\n"
 
 
 def write_csv(tmp_path, body):
@@ -40,17 +40,19 @@ def write_csv(tmp_path, body):
     return path
 
 
-def test_csv_dikelompokkan_per_produk_dan_diurutkan_per_minggu(tmp_path):
+def test_penjualan_harian_dijumlah_per_minggu_mulai_senin(tmp_path):
     path = write_csv(tmp_path, (
         "AIR,Air Mineral,botol,2026-01-12,30\n"
         "AIR,Air Mineral,botol,2026-01-05,20\n"
-        "MIE,Mi Instan,bungkus,2026-01-05,50\n"
+        "AIR,Air Mineral,botol,2026-01-11,5\n"
+        "MIE,Mi Instan,bungkus,2026-01-07,50\n"
     ))
     products = read_sales(path)
 
     assert list(products) == ["AIR", "MIE"]
     assert products["AIR"]["name"] == "Air Mineral"
-    assert products["AIR"]["weeks"] == [(date(2026, 1, 5), 20), (date(2026, 1, 12), 30)]
+    assert products["AIR"]["weeks"] == [(date(2026, 1, 5), 25), (date(2026, 1, 12), 30)]
+    assert products["MIE"]["weeks"] == [(date(2026, 1, 5), 50)]
 
 
 def test_jumlah_bukan_angka_menyebut_nomor_baris(tmp_path):

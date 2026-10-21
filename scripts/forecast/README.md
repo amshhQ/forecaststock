@@ -1,6 +1,6 @@
 # Script Python Trend Moment
 
-Script prosedural untuk menghitung prediksi penjualan mingguan dengan metode Trend Moment dari file CSV, beserta unit test PyTest.
+Script prosedural untuk menghitung prediksi penjualan minggu depan dengan metode Trend Moment dari file CSV penjualan harian, beserta unit test PyTest.
 
 Fungsinya:
 - Bukti MK Programming Fundamentals (Python): kontrol alur, fungsi, list/dict, file I/O, exception handling, PyTest, sorting/searching + Big-O.
@@ -12,11 +12,11 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 
 | File | Isi |
 |---|---|
-| `trend_moment.py` | Perhitungan: baca CSV, koefisien a & b, indeks musim, prediksi minggu depan, sorting, searching |
-| `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu (bukan data asli, seed tetap) |
-| `sample_sales.csv` | Data simulasi: 11 produk dengan kondisi berbeda-beda, sampai 104 minggu (21 Okt 2024 sampai 12 Okt 2026) |
+| `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching |
+| `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
+| `sample_sales.csv` | Data simulasi per hari (6.769 baris): 11 produk dengan kondisi berbeda-beda, sampai 104 minggu (21 Okt 2024 sampai 18 Okt 2026) |
 | `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv`, patokan untuk aplikasi |
-| `tests/test_trend_moment.py` | 19 unit test (ditulis dengan TDD, lihat riwayat commit) |
+| `tests/test_trend_moment.py` | 23 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
 
 ## Menjalankan
 
@@ -25,11 +25,11 @@ cd scripts/forecast
 python -m venv .venv                               # sekali saja
 .venv\Scripts\python -m pip install -r requirements.txt
 .venv\Scripts\python -m pytest -v                  # jalankan test
-.venv\Scripts\python trend_moment.py               # hitung dari sample_sales.csv → forecast_result.csv
+.venv\Scripts\python trend_moment.py               # hitung dari sample_sales.csv, hasil di forecast_result.csv
 .venv\Scripts\python trend_moment.py data.csv hasil.csv
 ```
 
-Format CSV masukan: `sku,name,unit,week_start,quantity` (`week_start` = tanggal Senin, format `YYYY-MM-DD`).
+Format CSV masukan: `sku,name,unit,date,quantity` (`date` = tanggal penjualan, format `YYYY-MM-DD`). Penjualan dijumlahkan per minggu mulai Senin, sama seperti aplikasi. Bedanya, aplikasi melewati minggu yang sedang berjalan, sedangkan script menghitung semua minggu di file. Jadi data yang dihitung script sebaiknya berakhir di hari Minggu. Produk dengan data kurang dari 2 minggu dilewati dan namanya ditampilkan.
 
 ## Rumus
 
@@ -42,6 +42,7 @@ Format CSV masukan: `sku,name,unit,week_start,quantity` (`week_start` = tanggal 
 
 | Fungsi | Kompleksitas | Keterangan |
 |---|---|---|
+| `read_sales` | O(r + n log n) | Satu kali loop atas r baris CSV, lalu mengurutkan n minggu tiap produk |
 | `trend_coefficients` | O(n) | Satu kali loop atas n minggu |
 | `seasonal_indices` | O(n) | Satu kali loop + 12 bulan |
 | `sort_by_forecast` | O(p²) | Insertion sort atas p produk (jumlah produk toko kecil) |

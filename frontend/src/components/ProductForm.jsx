@@ -8,12 +8,12 @@ import { Button, ErrorMessage, Field, inputClass, Loading, Modal } from './ui'
 const EMPTY = { sku: '', name: '', unit: '', category_id: '', current_stock: 0, min_stock: 0 }
 const MAX_STOCK = 1000000
 
-function validate(form) {
+function validate(form, isEdit) {
   const errors = {}
   if (!form.sku.trim()) errors.sku = 'SKU wajib diisi.'
   if (!form.name.trim()) errors.name = 'Nama wajib diisi.'
   if (!form.unit.trim()) errors.unit = 'Satuan wajib diisi.'
-  for (const field of ['current_stock', 'min_stock']) {
+  for (const field of isEdit ? ['min_stock'] : ['current_stock', 'min_stock']) {
     const value = Number(form[field])
     if (form[field] === '' || !Number.isInteger(value) || value < 0) errors[field] = 'Isi bilangan bulat 0 atau lebih.'
     else if (value > MAX_STOCK) errors[field] = 'Angkanya terlalu besar.'
@@ -24,7 +24,7 @@ function validate(form) {
 const INFO = {
   how: [
     'SKU adalah kode unik barang, dipakai juga di file impor.',
-    'Stok saat ini diisi dari hasil hitung barang di rak atau gudang.',
+    'Stok awal diisi sekali saat produk dibuat, dari hasil hitung barang di rak atau gudang. Setelah itu stok diubah lewat tombol Stok.',
     'Stok minimum adalah cadangan supaya barang tidak habis sebelum belanja berikutnya.',
   ],
 }
@@ -42,7 +42,7 @@ export default function ProductFormModal({ productId, onClose }) {
   }
 
   return (
-    <Modal open={Boolean(productId)} title={isEdit ? 'Ubah produk & stok' : 'Tambah produk'} info={INFO} onClose={onClose}>
+    <Modal open={Boolean(productId)} title={isEdit ? 'Ubah produk' : 'Tambah produk'} info={INFO} onClose={onClose}>
       {body}
     </Modal>
   )
@@ -74,7 +74,7 @@ function ProductForm({ id, initial, onClose }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const found = validate(form)
+    const found = validate(form, Boolean(id))
     setClientErrors(found)
     if (Object.keys(found).length > 0) return
     save.mutate({
@@ -82,7 +82,7 @@ function ProductForm({ id, initial, onClose }) {
       name: form.name.trim(),
       unit: form.unit.trim(),
       category_id: form.category_id || null,
-      current_stock: Number(form.current_stock),
+      ...(id ? {} : { current_stock: Number(form.current_stock) }),
       min_stock: Number(form.min_stock),
     })
   }
@@ -133,9 +133,19 @@ function ProductForm({ id, initial, onClose }) {
         </select>
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Stok saat ini" id="current_stock" error={errors.current_stock} hint="Hasil hitung di rak/gudang">
-          {input('current_stock', { type: 'number', min: 0, max: MAX_STOCK, step: 1, inputMode: 'numeric' })}
-        </Field>
+        {id ? (
+          <div>
+            <p className="block text-sm font-medium text-stone-700">Stok saat ini</p>
+            <p className="mt-1 rounded-lg bg-stone-50 px-3 py-2 text-sm text-stone-800">
+              {form.current_stock} {form.unit}
+            </p>
+            <p className="mt-1 text-xs text-stone-500">Ubah lewat tombol Stok supaya tercatat di riwayat</p>
+          </div>
+        ) : (
+          <Field label="Stok awal" id="current_stock" error={errors.current_stock} hint="Hasil hitung di rak/gudang">
+            {input('current_stock', { type: 'number', min: 0, max: MAX_STOCK, step: 1, inputMode: 'numeric' })}
+          </Field>
+        )}
         <Field label="Stok minimum" id="min_stock" error={errors.min_stock} hint="Stok pengaman yang selalu ingin disimpan">
           {input('min_stock', { type: 'number', min: 0, max: MAX_STOCK, step: 1, inputMode: 'numeric' })}
         </Field>

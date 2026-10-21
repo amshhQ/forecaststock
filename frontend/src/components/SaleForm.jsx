@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { api } from '../api/client'
-import { formatDate, lastFinishedMonday } from '../lib/format'
+import { formatDate, formatNumber, todayDate } from '../lib/format'
 import { Button, ErrorMessage, Field, InfoLink, inputClass, Loading, Modal } from './ui'
 
 const MAX_QUANTITY = 1000000
@@ -10,13 +10,8 @@ const MAX_QUANTITY = 1000000
 function validate(form) {
   const errors = {}
   if (!form.product_id) errors.product_id = 'Pilih produk.'
-  if (!form.week_start) {
-    errors.week_start = 'Isi tanggal awal minggu.'
-  } else {
-    const [y, m, d] = form.week_start.split('-').map(Number)
-    if (new Date(y, m - 1, d).getDay() !== 1) errors.week_start = 'Tanggal awal minggu harus hari Senin.'
-    else if (form.week_start > lastFinishedMonday()) errors.week_start = 'Minggu ini belum selesai. Penjualannya dicatat mulai Senin depan.'
-  }
+  if (!form.sale_date) errors.sale_date = 'Isi tanggal penjualan.'
+  else if (form.sale_date > todayDate()) errors.sale_date = 'Tanggal ini belum terjadi.'
   const quantity = Number(form.quantity)
   if (form.quantity === '' || !Number.isInteger(quantity) || quantity < 0) errors.quantity = 'Isi bilangan bulat 0 atau lebih.'
   else if (quantity > MAX_QUANTITY) errors.quantity = 'Angkanya terlalu besar.'
@@ -25,14 +20,18 @@ function validate(form) {
 
 const INFO = {
   how: [
-    'Isi total terjual selama satu minggu, Senin sampai Minggu.',
-    'Hanya minggu yang sudah selesai yang bisa dicatat. Kalau minggu itu sudah ada, jumlahnya diperbarui.',
+    'Catat kapan saja: tiap hari, tiap beberapa hari, atau sekaligus. Isi jumlah terjual pada tanggal itu.',
+    'Kalau tanggal itu sudah tercatat, jumlahnya diganti dengan angka baru, tidak dobel.',
+  ],
+  note: [
+    'Stok barang langsung berkurang sesuai jumlah terjual.',
+    'Untuk prediksi, penjualan dijumlah per minggu (Senin sampai Minggu). Minggu yang sedang berjalan ikut dihitung setelah minggunya selesai.',
   ],
 }
 
 export default function SaleFormModal({ open, onClose }) {
   return (
-    <Modal open={open} title="Input penjualan mingguan" info={INFO} onClose={onClose}>
+    <Modal open={open} title="Catat penjualan" info={INFO} onClose={onClose}>
       <SaleForm onClose={onClose} />
     </Modal>
   )
@@ -40,16 +39,18 @@ export default function SaleFormModal({ open, onClose }) {
 
 function SaleForm({ onClose }) {
   const queryClient = useQueryClient()
-  const [form, setForm] = useState({ product_id: '', week_start: lastFinishedMonday(), quantity: '' })
+  const [form, setForm] = useState({ product_id: '', sale_date: todayDate(), quantity: '' })
   const [clientErrors, setClientErrors] = useState({})
   const products = useQuery({ queryKey: ['products', 'all'], queryFn: () => api('/products') })
 
   const save = useMutation({
     mutationFn: () => api('/sales', { method: 'POST', body: { ...form, quantity: Number(form.quantity) } }),
     onSuccess: (sale) => {
-      toast.success(`Penjualan ${sale.product.name} minggu ${formatDate(form.week_start)} tersimpan.`)
+      toast.success(`Penjualan ${sale.product.name} tanggal ${formatDate(form.sale_date)} tersimpan. Stok sekarang ${formatNumber(sale.product.current_stock)} ${sale.product.unit}.`)
       queryClient.invalidateQueries({ queryKey: ['sales'] })
+      queryClient.invalidateQueries({ queryKey: ['products'] })
       queryClient.invalidateQueries({ queryKey: ['forecasts'] })
+      queryClient.invalidateQueries({ queryKey: ['movements'] })
       onClose()
     },
   })
@@ -70,6 +71,8 @@ function SaleForm({ onClose }) {
     )
   }
 
+  const selected = products.data.find((p) => String(p.id) === String(form.product_id))
+
   return (
     <form
       className="space-y-4"
@@ -81,7 +84,7 @@ function SaleForm({ onClose }) {
         if (Object.keys(found).length === 0) save.mutate()
       }}
     >
-      <Field label="Produk" id="product_id" error={errors.product_id}>
+      <Field label="Produk" id="product_id" error={errors.product_id} hint={selected ? `Stok tercatat: ${formatNumber(selected.current_stock)} ${selected.unit}` : undefined}>
         <select id="product_id" className={inputClass} value={form.product_id} onChange={set('product_id')} aria-invalid={Boolean(errors.product_id)}>
           <option value="">Pilih produk…</option>
           {products.data.map((p) => (
@@ -91,31 +94,25 @@ function SaleForm({ onClose }) {
           ))}
         </select>
       </Field>
-      <Field label="Tanggal awal minggu (Senin)" id="week_start" error={errors.week_start} hint={`Minggu terakhir yang sudah selesai: ${formatDate(lastFinishedMonday())}`}>
-        <input
-          id="week_start"
-          type="date"
-          max={lastFinishedMonday()}
-          className={inputClass}
-          value={form.week_start}
-          onChange={set('week_start')}
-          aria-invalid={Boolean(errors.week_start)}
-        />
-      </Field>
-      <Field label="Jumlah terjual dalam minggu itu" id="quantity" error={errors.quantity}>
-        <input
-          id="quantity"
-          type="number"
-          min={0}
-          max={MAX_QUANTITY}
-          step={1}
-          inputMode="numeric"
-          className={inputClass}
-          value={form.quantity}
-          onChange={set('quantity')}
-          aria-invalid={Boolean(errors.quantity)}
-        />
-      </Field>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Tanggal" id="sale_date" error={errors.sale_date}>
+          <input id="sale_date" type="date" max={todayDate()} className={inputClass} value={form.sale_date} onChange={set('sale_date')} aria-invalid={Boolean(errors.sale_date)} />
+        </Field>
+        <Field label="Jumlah terjual" id="quantity" error={errors.quantity}>
+          <input
+            id="quantity"
+            type="number"
+            min={0}
+            max={MAX_QUANTITY}
+            step={1}
+            inputMode="numeric"
+            className={inputClass}
+            value={form.quantity}
+            onChange={set('quantity')}
+            aria-invalid={Boolean(errors.quantity)}
+          />
+        </Field>
+      </div>
 
       {save.isError && !Object.keys(save.error.fieldErrors).length && <ErrorMessage error={save.error} />}
 

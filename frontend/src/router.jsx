@@ -24,6 +24,7 @@ export const router = createBrowserRouter([
       { path: 'kategori', element: <CategoriesPage /> },
       { path: 'penjualan', element: <SalesPage /> },
       { path: 'prediksi', element: <ForecastsPage /> },
+      // Halaman detail memakai library grafik yang besar, jadi baru diunduh saat dibuka.
       { path: 'prediksi/:id', lazy: () => import('./pages/ForecastDetailPage').then((m) => ({ Component: m.default })) },
       { path: 'rekomendasi', element: <RecommendationsPage /> },
       { path: 'skenario', element: <ScenariosPage /> },

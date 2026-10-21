@@ -8,6 +8,9 @@ baru satu minggu.
 Pola musim adalah asumsi: kebutuhan pokok naik di bulan Lebaran (Maret-April)
 dan Desember, mi instan dan kopi naik saat musim hujan (November-Maret),
 air mineral dan es krim naik saat kemarau (Juli-September).
+Total per minggu dihitung lebih dulu, lalu dipecah menjadi 7 penjualan harian
+(akhir pekan sedikit lebih ramai). Pemecahan harian memakai pengacak terpisah,
+jadi total per minggu tidak ikut berubah.
 Angka acaknya memakai seed tetap, jadi hasilnya selalu sama setiap dibuat ulang.
 """
 
@@ -16,6 +19,8 @@ import random
 from datetime import date, timedelta
 
 SEED = 2026
+DAILY_SEED = 2027
+DAY_WEIGHTS = [1.0, 0.9, 0.9, 1.0, 1.1, 1.3, 1.2]
 FIRST_WEEK = date(2024, 10, 21)
 TOTAL_WEEKS = 104
 OUTPUT_FILE = "sample_sales.csv"
@@ -70,14 +75,29 @@ def simulate_quantity(product, week_index, month, rng):
     return max(0, round(trend * season_factor(product["season"], month) * noise * spike))
 
 
+def split_week(total, rng):
+    """Pecah total seminggu menjadi 7 angka harian yang jumlahnya tetap sama."""
+    weights = [w * rng.uniform(0.7, 1.3) for w in DAY_WEIGHTS]
+    scale = total / sum(weights)
+    raw = [w * scale for w in weights]
+    days = [int(r) for r in raw]
+    leftovers = sorted(range(7), key=lambda i: raw[i] - days[i], reverse=True)
+    for i in leftovers[: total - sum(days)]:
+        days[i] += 1
+    return days
+
+
 def build_rows():
     rng = random.Random(SEED)
+    daily_rng = random.Random(DAILY_SEED)
     rows = []
     for product in PRODUCTS:
         for week_index in range(product.get("first_index", 0), TOTAL_WEEKS):
             week_start = FIRST_WEEK + timedelta(weeks=week_index)
             quantity = simulate_quantity(product, week_index, week_start.month, rng)
-            rows.append([product["sku"], product["name"], product["unit"], week_start.isoformat(), quantity])
+            for offset, day_quantity in enumerate(split_week(quantity, daily_rng)):
+                day = week_start + timedelta(days=offset)
+                rows.append([product["sku"], product["name"], product["unit"], day.isoformat(), day_quantity])
     return rows
 
 
@@ -85,7 +105,7 @@ def main():
     rows = build_rows()
     with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerow(["sku", "name", "unit", "week_start", "quantity"])
+        writer.writerow(["sku", "name", "unit", "date", "quantity"])
         writer.writerows(rows)
     print(f"{len(rows)} baris data simulasi ditulis ke {OUTPUT_FILE}")
 
