@@ -51,14 +51,14 @@ export default function DashboardPage() {
       {d.low_stock.length > 0 && (
         <section className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4" aria-labelledby="stok-menipis">
           <h2 id="stok-menipis" className="font-semibold text-amber-900">
-            Peringatan stok menipis ({d.low_stock.length} barang)
+            {d.low_stock.length === 1 ? `Stok ${d.low_stock[0].name} hampir habis` : `${d.low_stock.length} barang hampir habis`}
           </h2>
-          <p className="mt-0.5 text-sm text-amber-900">Stok sudah sama atau di bawah stok minimum. Klik barangnya untuk mencatat barang masuk.</p>
+          <p className="mt-0.5 text-sm text-amber-900">Sisanya sudah sampai batas stok minimum. Pilih barangnya untuk mencatat barang masuk.</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {d.low_stock.map((p) => (
               <li key={p.id}>
                 <Link to={`/produk?stok=${p.id}`} className="inline-block rounded-lg bg-white px-3 py-1.5 text-sm text-stone-800 ring-1 ring-amber-200 hover:ring-amber-400">
-                  <span className="font-medium">{p.name}</span>: {formatNumber(p.current_stock)} {p.unit} (minimum {formatNumber(p.min_stock)})
+                  <span className="font-medium">{p.name}</span>, sisa {formatNumber(p.current_stock)} {p.unit} dari minimum {formatNumber(p.min_stock)}
                 </Link>
               </li>
             ))}

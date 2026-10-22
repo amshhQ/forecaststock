@@ -18,7 +18,7 @@ function checkFile(file) {
 const INFO = {
   how: [
     'Kolom wajib: sku, date (tanggal penjualan, format YYYY-MM-DD), dan quantity. File dari Excel versi Indonesia juga bisa dibaca.',
-    'Cara paling mudah: unduh contoh CSV, ubah angkanya, lalu unggah.',
+    'Paling mudah, unduh contoh CSV, ubah angkanya, lalu unggah.',
   ],
   note: [
     'Baris yang benar langsung disimpan. Baris yang salah dilewati dan ditampilkan alasannya.',

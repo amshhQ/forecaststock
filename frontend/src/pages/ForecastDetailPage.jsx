@@ -90,11 +90,11 @@ export default function ForecastDetailPage() {
       <Card className="mb-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-1">
-            <h2 className="font-semibold text-stone-800">Penjualan mingguan, garis tren, dan prediksi</h2>
+            <h2 className="font-semibold text-stone-800">Total penjualan per minggu, garis tren, dan prediksi</h2>
             <InfoTip label="Cara membaca grafik">
               <ul className="list-disc space-y-1 pl-4">
                 <li>
-                  <strong>Garis biru</strong>: penjualan asli per minggu, dari Penjualan.
+                  <strong>Garis biru</strong>: total penjualan asli per minggu, dijumlah dari catatan harian di Penjualan.
                 </li>
                 <li>
                   <strong>Garis oranye putus-putus</strong>: garis tren Y = a + bX hasil Trend Moment.
