@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { api } from '../api/client'
 import { Empty, ErrorMessage, LinkButton, Loading, PageHeader, SearchInput, SortHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { formatDate, formatNumber, mapeLabel } from '../lib/format'
+import { formatNumber, mapeLabel, weekLabel } from '../lib/format'
 import { matches, sortRows, useDebounce, useSort } from '../lib/hooks'
 
 const STATUS_ORDER = { perlu_restock: 0, berlebih: 1, aman: 2, data_kurang: 3 }
@@ -27,7 +27,7 @@ const INFO = {
     'Prediksi adalah tren dikali indeks musim.',
     'MAPE adalah rata-rata meleset prediksi pada 8 minggu terakhir. Makin kecil makin akurat.',
   ],
-  note: ['Kalau minggu depan ada kondisi yang tidak biasa, sesuaikan lewat skenario di Rekomendasi Stok.'],
+  note: ['Kalau minggu yang diprediksi ada kondisi yang tidak biasa, sesuaikan lewat skenario di Rekomendasi Stok.'],
 }
 
 export default function ForecastsPage() {
@@ -49,7 +49,7 @@ export default function ForecastsPage() {
       <PageHeader
         info={INFO}
         title="Prediksi Penjualan"
-        description={`Perkiraan jumlah terjual minggu depan${nextWeek ? ` (mulai ${formatDate(nextWeek)})` : ''} untuk setiap produk, dihitung dengan metode Trend Moment.`}
+        description={`Perkiraan jumlah terjual setiap produk untuk ${nextWeek ? weekLabel(nextWeek) : 'minggu berikutnya'}, dihitung dengan metode Trend Moment.`}
       />
 
       <div className="mb-4">

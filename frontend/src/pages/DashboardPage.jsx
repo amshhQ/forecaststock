@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { api } from '../api/client'
 import { Card, Empty, ErrorMessage, InfoLink, InfoTip, LinkButton, Loading, PageHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { formatDate, formatNumber } from '../lib/format'
+import { addDays, currentMonday, formatDate, formatNumber, weekLabel } from '../lib/format'
 import { useAuthStore } from '../stores/authStore'
 
 const STATUS_TILES = [
-  ['perlu_restock', 'Perlu restock', 'Stok di bawah target minggu depan'],
+  ['perlu_restock', 'Perlu restock', 'Belum cukup untuk seminggu'],
   ['berlebih', 'Stok berlebih', 'Cukup untuk lebih dari 2 minggu'],
-  ['aman', 'Stok aman', 'Cukup untuk minggu depan'],
+  ['aman', 'Stok aman', 'Cukup untuk seminggu'],
   ['data_kurang', 'Data kurang', 'Riwayat kurang dari 2 minggu'],
 ]
 
@@ -28,6 +28,10 @@ export default function DashboardPage() {
 
   const d = dashboard.data
   const nextWeek = d.top_forecasts[0]?.forecast.week_start
+  const lastDay = d.last_week ? addDays(d.last_week, 6) : null
+  const summary = [`${d.total_products} produk.`]
+  // if (lastDay) summary.push(`Penjualan sudah lengkap sampai ${formatDate(lastDay)}${nextWeek ? `, jadi prediksi dibuat untuk ${weekLabel(nextWeek)}` : ''}.`)
+  // if (nextWeek && nextWeek < currentMonday()) summary.push('Belum ada penjualan baru setelah tanggal itu, jadi prediksinya belum maju ke minggu ini.')
 
   if (d.total_products === 0) {
     return (
@@ -44,7 +48,7 @@ export default function DashboardPage() {
     <>
       <PageHeader
         title={`Halo, ${user?.name ?? ''}`}
-        description={`${d.total_products} produk. Penjualan lengkap terakhir minggu ${formatDate(d.last_week)}.${nextWeek ? ` Prediksi untuk minggu ${formatDate(nextWeek)}.` : ''}`}
+        description={summary.join(' ')}
         info={INFO}
       />
 
@@ -53,7 +57,7 @@ export default function DashboardPage() {
           <h2 id="stok-menipis" className="font-semibold text-amber-900">
             {d.low_stock.length === 1 ? `Stok ${d.low_stock[0].name} hampir habis` : `${d.low_stock.length} barang hampir habis`}
           </h2>
-          <p className="mt-0.5 text-sm text-amber-900">Sisanya sudah sampai batas stok minimum. Pilih barangnya untuk mencatat barang masuk.</p>
+          <p className="mt-0.5 text-sm text-amber-900">mendekati batas stok minimum.</p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {d.low_stock.map((p) => (
               <li key={p.id}>
@@ -82,7 +86,7 @@ export default function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section>
           <div className="mb-2 flex items-center gap-1">
-            <h2 className="font-semibold text-stone-800">Prediksi tertinggi minggu depan</h2>
+            <h2 className="font-semibold text-stone-800">Prediksi tertinggi</h2>
             <InfoTip label="Asal data prediksi tertinggi">
               5 produk dengan prediksi terbesar dari halaman <InfoLink to="/prediksi">Prediksi Trend Moment</InfoLink>. Prediksinya dihitung dari Penjualan tiap produk.
             </InfoTip>
@@ -123,7 +127,7 @@ export default function DashboardPage() {
             </InfoTip>
           </div>
           {d.needs_restock.length === 0 ? (
-            <Card>Semua stok masih cukup untuk minggu depan.</Card>
+            <Card>Semua stok masih cukup untuk seminggu.</Card>
           ) : (
             <Table>
               <thead className="bg-stone-50">
