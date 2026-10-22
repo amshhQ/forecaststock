@@ -9,6 +9,30 @@ export function formatDate(isoDate) {
   return dateFormat.format(new Date(year, month - 1, day))
 }
 
+const shortDate = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' })
+
+export function addDays(isoDate, days) {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  const date = new Date(year, month - 1, day + days)
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+export function formatWeek(monday) {
+  const sunday = addDays(monday, 6)
+  const [startYear, startMonth, startDay] = monday.split('-').map(Number)
+  const sameMonth = monday.slice(0, 7) === sunday.slice(0, 7)
+  const start = sameMonth ? String(startDay) : shortDate.format(new Date(startYear, startMonth - 1, startDay))
+  return monday.slice(0, 4) === sunday.slice(0, 4) ? `${start} sampai ${formatDate(sunday)}` : `${formatDate(monday)} sampai ${formatDate(sunday)}`
+}
+
+export function weekLabel(monday) {
+  const current = currentMonday()
+  if (monday === current) return `minggu ini (${formatWeek(monday)})`
+  if (monday === addDays(current, 7)) return `minggu depan (${formatWeek(monday)})`
+  return `minggu ${formatWeek(monday)}`
+}
+
 export function currentMonday() {
   const today = new Date()
   const diff = (today.getDay() + 6) % 7

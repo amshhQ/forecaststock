@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { api } from '../api/client'
 import { Empty, ErrorMessage, inputClass, LinkButton, Loading, PageHeader, SearchInput, SortHeader, StatusBadge, Table, td } from '../components/ui'
-import { formatDate, formatNumber } from '../lib/format'
+import { formatNumber, weekLabel } from '../lib/format'
 import { matches, sortRows, useDebounce, useSort } from '../lib/hooks'
 
 const sortValue = (row, key) =>
@@ -50,7 +50,7 @@ export default function RecommendationsPage() {
 
   return (
     <>
-      <PageHeader info={INFO} title="Rekomendasi Stok" description={`Jumlah barang yang sebaiknya ditambah untuk minggu ${week ? formatDate(week) : 'depan'}.`} />
+      <PageHeader info={INFO} title="Rekomendasi Stok" description={`Jumlah barang yang sebaiknya ditambah untuk ${week ? weekLabel(week) : 'minggu berikutnya'}.`} />
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="w-full sm:w-72">

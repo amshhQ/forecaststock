@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import { CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { api } from '../api/client'
 import { Button, Card, Empty, InfoLink, InfoTip, LinkButton, Loading, PageHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { formatDate, formatNumber, mapeLabel } from '../lib/format'
+import { formatDate, formatNumber, mapeLabel, weekLabel } from '../lib/format'
 
 const COLORS = { actual: '#2a78d6', trend: '#eb6834', forecast: '#1baf7a' }
 const RANGES = [
@@ -63,7 +63,7 @@ export default function ForecastDetailPage() {
 
       <div className="mb-5 grid gap-4 sm:grid-cols-3">
         <Card>
-          <p className="text-sm text-stone-600">Prediksi minggu {formatDate(forecast.week_start)}</p>
+          <p className="text-sm text-stone-600">Prediksi {weekLabel(forecast.week_start)}</p>
           <p className="mt-1 text-3xl font-semibold text-stone-900">
             {formatNumber(forecast.value)} <span className="text-base font-normal text-stone-500">{product.unit}</span>
           </p>
@@ -100,7 +100,7 @@ export default function ForecastDetailPage() {
                   <strong>Garis oranye putus-putus</strong>: garis tren Y = a + bX hasil Trend Moment.
                 </li>
                 <li>
-                  <strong>Titik hijau</strong> di ujung kanan: prediksi minggu depan, yaitu tren dikali indeks musim.
+                  <strong>Titik hijau</strong> di ujung kanan: prediksi untuk minggu setelah data terakhir, yaitu tren dikali indeks musim.
                 </li>
               </ul>
             </InfoTip>
@@ -116,7 +116,7 @@ export default function ForecastDetailPage() {
         <div
           className="h-80"
           role="img"
-          aria-label={`Grafik penjualan mingguan ${product.name} dengan garis tren dan prediksi ${formatNumber(forecast.value)} ${product.unit} untuk minggu ${formatDate(forecast.week_start)}`}
+          aria-label={`Grafik penjualan mingguan ${product.name} dengan garis tren dan prediksi ${formatNumber(forecast.value)} ${product.unit} untuk ${weekLabel(forecast.week_start)}`}
         >
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 24, right: 28, bottom: 8, left: 0 }}>
@@ -175,7 +175,7 @@ export default function ForecastDetailPage() {
         <dl className="mt-3 grid gap-x-8 gap-y-1 text-sm lg:grid-cols-2">
           <Row label="1. Jumlah data (n)" value={`${weeks} minggu, X = 0 sampai ${weeks - 1}`} />
           <Row label="2. Persamaan tren" value={`Y = ${forecast.a} + (${forecast.b}) X`} />
-          <Row label="3. X untuk minggu depan" value={weeks} />
+          <Row label="3. X untuk minggu yang diprediksi" value={weeks} />
           <Row label="4. Nilai tren" value={`${forecast.a} + (${forecast.b} × ${weeks}) = ${formatNumber(forecast.trend)}`} />
           <Row label="5. Indeks musim bulan tersebut" value={weeks >= 52 ? forecast.seasonal_index : '1 (data < 52 minggu)'} />
           <Row label="6. Prediksi" value={`${formatNumber(forecast.trend)} × ${forecast.seasonal_index} = ${formatNumber(forecast.value)}`} />
