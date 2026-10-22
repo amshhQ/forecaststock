@@ -20,7 +20,7 @@ function validate(form) {
 
 const INFO = {
   how: [
-    'Catat kapan saja: tiap hari, tiap beberapa hari, atau sekaligus. Isi jumlah terjual pada tanggal itu.',
+    'Catat kapan saja, misalnya tiap hari, tiap beberapa hari, atau sekaligus. Isi jumlah terjual pada tanggal itu.',
     'Kalau tanggal itu sudah tercatat, jumlahnya diganti dengan angka baru, tidak dobel.',
   ],
   note: [

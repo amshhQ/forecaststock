@@ -110,7 +110,7 @@ export default function SalesPage() {
             title={productId ? 'Produk ini belum punya data penjualan' : 'Belum ada data penjualan'}
             action={<Button onClick={() => openForm('input')}>Catat penjualan</Button>}
           >
-            Catat penjualan per minggu atau impor dari file CSV.
+            Catat penjualan per tanggal, kapan saja, atau impor dari file CSV.
           </Empty>
         )
       ) : (

@@ -133,9 +133,7 @@ export default function Layout() {
         <div className="mx-auto max-w-6xl">
           {user?.is_demo && (
             <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-amber-200">
-              <span>
-                Akun demo: data penjualan adalah <strong>data simulasi</strong>, bukan data pasar asli.
-              </span>
+              <span>Ini akun demo. Angka penjualannya hasil simulasi, bukan dari toko sungguhan.</span>
               <button
                 type="button"
                 className="font-semibold underline hover:no-underline disabled:opacity-50"
