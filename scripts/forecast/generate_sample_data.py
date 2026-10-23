@@ -1,13 +1,14 @@
 """Membuat data penjualan simulasi untuk demo (bukan data pasar asli).
 
-Tiap produk sengaja dibuat berbeda supaya semua kondisi muncul di aplikasi:
-tren naik, tren turun, datar, penjualan yang naik-turun tajam, minggu tanpa
-penjualan, produk yang datanya belum setahun, dan produk baru yang datanya
-baru satu minggu.
+Data dibuat untuk minimarket dengan 7 produk, satu kondisi per produk, supaya
+semua kondisi muncul di aplikasi: tren naik stabil (Beras), tren turun (Gula),
+musiman (Air Mineral), naik-turun tajam (Telur), sangat musiman dengan minggu
+tanpa penjualan (Es Krim), data belum setahun (Susu Kental Manis), dan produk
+baru yang datanya baru satu minggu (Teh Botol).
 
 Pola musim adalah asumsi: kebutuhan pokok naik di bulan Lebaran (Maret-April)
-dan Desember, mi instan dan kopi naik saat musim hujan (November-Maret),
-air mineral dan es krim naik saat kemarau (Juli-September).
+dan Desember, air mineral dan es krim naik saat kemarau (Juli-September) dan
+turun saat musim hujan (November-Maret).
 Total per minggu dihitung lebih dulu, lalu dipecah menjadi 7 penjualan harian
 (akhir pekan sedikit lebih ramai). Pemecahan harian memakai pengacak terpisah,
 jadi total per minggu tidak ikut berubah.
@@ -30,17 +31,13 @@ RAINY_MONTHS = (11, 12, 1, 2, 3)
 DRY_MONTHS = (7, 8, 9)
 
 PRODUCTS = [
-    {"sku": "BRS-5KG", "name": "Beras 5 kg", "unit": "karung", "base": 40, "growth": 0.10, "noise": 0.10, "season": "pokok"},
-    {"sku": "MYK-1L", "name": "Minyak Goreng 1 L", "unit": "botol", "base": 55, "growth": 0.05, "noise": 0.08, "season": "pokok"},
-    {"sku": "GLP-1KG", "name": "Gula Pasir 1 kg", "unit": "bungkus", "base": 48, "growth": -0.30, "noise": 0.10, "season": "pokok"},
-    {"sku": "TLR-1KG", "name": "Telur Ayam 1 kg", "unit": "kg", "base": 30, "growth": 0.05, "noise": 0.35, "season": None},
-    {"sku": "MIE-INS", "name": "Mi Instan", "unit": "bungkus", "base": 120, "growth": 0.15, "noise": 0.10, "season": "hujan"},
-    {"sku": "AIR-600", "name": "Air Mineral 600 ml", "unit": "botol", "base": 150, "growth": 0.10, "noise": 0.10, "season": "kemarau"},
-    {"sku": "KPI-SCT", "name": "Kopi Sachet", "unit": "sachet", "base": 90, "growth": 0.20, "noise": 0.12, "season": "hujan"},
+    {"sku": "BRS-5KG", "name": "Beras 5 kg", "unit": "karung", "base": 40, "growth": 0.10, "noise": 0.08, "season": "pokok"},
+    {"sku": "GLP-1KG", "name": "Gula Pasir 1 kg", "unit": "bungkus", "base": 50, "growth": -0.30, "noise": 0.06, "season": "pokok"},
+    {"sku": "AIR-600", "name": "Air Mineral 600 ml", "unit": "botol", "base": 100, "growth": 0.10, "noise": 0.08, "season": "kemarau"},
+    {"sku": "TLR-1KG", "name": "Telur Ayam 1 kg", "unit": "kg", "base": 30, "growth": 0.0, "noise": 0.45, "season": None},
     {"sku": "ESK-CUP", "name": "Es Krim Cup", "unit": "cup", "base": 10, "growth": 0.0, "noise": 0.30, "season": "es"},
-    {"sku": "SBN-CP", "name": "Sabun Cuci Piring", "unit": "pcs", "base": 35, "growth": -0.45, "noise": 0.10, "season": None},
-    {"sku": "SKM-370", "name": "Susu Kental Manis 370 g", "unit": "kaleng", "base": 14, "growth": 1.20, "noise": 0.12, "season": None, "first_index": 74},
-    {"sku": "TEH-BTL", "name": "Teh Botol 350 ml", "unit": "botol", "base": 24, "growth": 0.0, "noise": 0.10, "season": None, "first_index": 103},
+    {"sku": "SKM-370", "name": "Susu Kental Manis 370 g", "unit": "kaleng", "base": 20, "growth": 1.0, "noise": 0.10, "season": None, "first_index": 74},
+    {"sku": "TEH-BTL", "name": "Teh Botol 350 ml", "unit": "botol", "base": 20, "growth": 0.0, "noise": 0.10, "season": None, "first_index": 103},
 ]
 
 
@@ -51,8 +48,6 @@ def season_factor(season, month):
             return 1.35
         if month == 12:
             return 1.15
-    if season == "hujan" and month in RAINY_MONTHS:
-        return 1.20
     if season == "kemarau":
         if month in RAINY_MONTHS:
             return 0.75
