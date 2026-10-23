@@ -64,6 +64,6 @@ cd scripts/forecast; .venv\Scripts\python -m pytest -v    # 23 test
 cd frontend; npx oxlint src; npm run build
 ```
 
-Ketiganya juga dijalankan otomatis oleh GitHub Actions setiap ada push ke `dev` atau `main`.
+Ketiganya juga dijalankan otomatis oleh GitHub Actions setiap ada push ke `dev` atau `main`. Push ke `main` yang lulus semua test langsung dipasang ke server produksi di https://shubkhiz.com.
 
 Salah satu test memastikan hasil prediksi aplikasi (PHP) sama dengan hasil script Python untuk data yang sama.
