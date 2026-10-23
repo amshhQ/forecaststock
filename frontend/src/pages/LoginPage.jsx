@@ -102,7 +102,7 @@ export default function LoginPage() {
 
         <div className="mt-4 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-600">
           <p>
-            Mau mencoba dulu? Pakai akun demo yang sudah berisi data simulasi 11 produk selama dua tahun.
+            Mau mencoba dulu? Pakai akun demo yang sudah berisi data simulasi 7 produk minimarket selama dua tahun.
           </p>
           <Button
             variant="ghost"

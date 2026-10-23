@@ -16,7 +16,7 @@ Proyek semester 1, Fast Track Ilmu Komputer, Universitas Cakrawala.
 - Target stok, jumlah restock, dan status stok (perlu restock, aman, berlebih)
 - Skenario penyesuaian manual untuk kondisi di luar pola biasa, untuk semua produk atau satu kategori
 - Bukan aplikasi kasir: tidak ada harga, nota, atau laporan keuangan
-- Akun demo berisi data simulasi 11 produk yang mencakup semua kondisi stok, bisa di-reset dari banner akun demo
+- Akun demo berisi data simulasi 7 produk minimarket yang mencakup semua kondisi stok, bisa di-reset dari banner akun demo
 
 Dokumen SDLC (SRS, UML, ADR, test plan, panduan pengguna) disimpan terpisah dan dilampirkan di laporan proyek.
 

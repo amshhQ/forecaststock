@@ -14,7 +14,7 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 |---|---|
 | `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching |
 | `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
-| `sample_sales.csv` | Data simulasi per hari (6.769 baris): 11 produk dengan kondisi berbeda-beda, sampai 104 minggu (21 Okt 2024 sampai 18 Okt 2026) |
+| `sample_sales.csv` | Data simulasi per hari (3.857 baris): 7 produk minimarket, satu kondisi per produk, sampai 104 minggu (21 Okt 2024 sampai 18 Okt 2026) |
 | `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv`, patokan untuk aplikasi |
 | `tests/test_trend_moment.py` | 23 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
 
