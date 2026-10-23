@@ -54,3 +54,45 @@ jobs:
       - run: npm ci
       - run: npx oxlint src
       - run: npm run build
+
+  deploy:
+    name: Deploy ke Hostinger
+    needs: [backend, python, frontend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: deploy
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci && npm run build
+        working-directory: frontend
+      - name: Siapkan kunci SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Unggah frontend
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm -rf ~/dist_baru"
+          scp -P ${{ secrets.SSH_PORT }} -r frontend/dist ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/dist_baru
+      # Hostinger menonaktifkan proc_open, jadi script composer dijalankan manual
+      - name: Perbarui server
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            set -e
+            cd ${{ secrets.APP_DIR }}
+            git pull origin main
+            cd backend
+            composer install --no-dev --optimize-autoloader --no-scripts
+            php artisan package:discover --ansi
+            php artisan migrate --force
+            php artisan optimize
+            rm -rf public/assets
+            cp -r ~/dist_baru/. public/
+            rm -rf ~/dist_baru
+          "
