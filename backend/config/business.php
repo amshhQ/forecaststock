@@ -5,7 +5,7 @@ return [
 
     'types' => [
         'kelontong' => [
-            'label' => 'Warung / toko kelontong',
+            'label' => 'Toko kelontong / minimarket',
             'categories' => ['Sembako', 'Makanan & Minuman', 'Kebutuhan Rumah Tangga'],
             'units' => ['pcs', 'bungkus', 'botol', 'karung', 'liter', 'kg', 'dus'],
         ],

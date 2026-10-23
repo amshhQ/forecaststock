@@ -133,7 +133,7 @@ class ApiTest extends TestCase
         Sanctum::actingAs($demo);
 
         $this->postJson('/api/sales', [
-            'product_id' => $demo->products()->where('sku', 'KPI-SCT')->first()->id,
+            'product_id' => $demo->products()->where('sku', 'AIR-600')->first()->id,
             'sale_date' => '2026-10-21',
             'quantity' => 10,
         ])->assertCreated();
@@ -146,9 +146,9 @@ class ApiTest extends TestCase
         $csv = "sku,date,quantity\n"
             ."BRS-5KG,2026-10-12,50\n"
             ."TIDAK-ADA,2026-10-12,5\n"
-            ."MIE-INS,2026-10-13,5\n"
+            ."GLP-1KG,2026-10-13,5\n"
             ."AIR-600,2026-10-12,abc\n"
-            ."MYK-1L,2026-10-22,5\n";
+            ."TLR-1KG,2026-10-22,5\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('penjualan.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()
@@ -164,7 +164,7 @@ class ApiTest extends TestCase
 
         $this->getJson('/api/dashboard')
             ->assertOk()
-            ->assertJsonPath('total_products', 11)
+            ->assertJsonPath('total_products', 7)
             ->assertJsonPath('last_week', '2026-10-12')
             ->assertJsonCount(5, 'top_forecasts');
     }
@@ -215,7 +215,7 @@ class ApiTest extends TestCase
 
         $this->getJson('/api/products?sort=current_stock&direction=desc')
             ->assertOk()
-            ->assertJsonPath('0.sku', 'KPI-SCT');
+            ->assertJsonPath('0.sku', 'AIR-600');
     }
 
     public function test_kolom_urutan_yang_tidak_dikenal_ditolak(): void
@@ -234,7 +234,7 @@ class ApiTest extends TestCase
         $this->postJson('/api/demo/reset')->assertOk();
 
         $rows = count(file(database_path('data/sample_sales.csv'), FILE_SKIP_EMPTY_LINES)) - 1;
-        $this->assertSame(11, $demo->products()->count());
+        $this->assertSame(7, $demo->products()->count());
         $this->assertSame($rows, Sale::count());
     }
 

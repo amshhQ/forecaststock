@@ -17,16 +17,12 @@ class DatabaseSeeder extends Seeder
 
     private const PRODUCT_SETUP = [
         'BRS-5KG' => ['Sembako', 20, 10],
-        'MYK-1L' => ['Sembako', 80, 15],
         'GLP-1KG' => ['Sembako', 120, 10],
-        'TLR-1KG' => ['Sembako', 25, 8],
-        'MIE-INS' => ['Makanan & Minuman', 60, 30],
-        'AIR-600' => ['Makanan & Minuman', 240, 40],
-        'KPI-SCT' => ['Makanan & Minuman', 400, 25],
+        'TLR-1KG' => ['Sembako', 25, 10],
+        'AIR-600' => ['Makanan & Minuman', 150, 20],
         'ESK-CUP' => ['Makanan & Minuman', 30, 5],
-        'SKM-370' => ['Makanan & Minuman', 10, 5],
+        'SKM-370' => ['Makanan & Minuman', 15, 5],
         'TEH-BTL' => ['Makanan & Minuman', 5, 6],
-        'SBN-CP' => ['Kebutuhan Rumah Tangga', 45, 10],
     ];
 
     private const STOCK_HISTORY = [
@@ -47,7 +43,7 @@ class DatabaseSeeder extends Seeder
     {
         $user = User::updateOrCreate(
             ['email' => self::DEMO_EMAIL],
-            ['name' => 'Akun Demo', 'store_name' => 'Warung Demo Sejahtera', 'business_type' => 'kelontong', 'password' => self::DEMO_PASSWORD],
+            ['name' => 'Akun Demo', 'store_name' => 'Minimarket Sejahtera', 'business_type' => 'kelontong', 'password' => self::DEMO_PASSWORD],
         );
 
         $this->seedDemoData($user);
