@@ -34,9 +34,9 @@ class DatabaseSeeder extends Seeder
     ];
 
     private const SCENARIOS = [
-        ['Menjelang Lebaran', 25, 'Contoh: Lebaran tahun ini jatuh lebih awal, jadi belum terbaca oleh indeks musim bulan.'],
-        ['Hujan datang lebih awal', -10, 'Contoh: hujan deras sebelum bulan musim hujan biasanya, pembeli yang datang berkurang.'],
-        ['Promo toko', 15, 'Contoh: ada potongan harga di toko.'],
+        ['Menjelang Lebaran', 25, 'Lebaran tahun ini lebih awal dari tahun sebelumnya.'],
+        ['Hujan datang lebih awal', -10, 'Musim hujan datang lebih awal dari biasanya, jumlah pembeli cenderung turun.'],
+        ['Promo toko', 15, 'Program potongan harga selama satu minggu.'],
     ];
 
     public function run(): void
