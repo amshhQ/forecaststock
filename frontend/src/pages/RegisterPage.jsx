@@ -82,7 +82,7 @@ export default function RegisterPage() {
           <p className="mt-1 text-sm text-stone-600">Untuk toko yang menjual barang dan punya stok. Kategori awal dan saran satuan disesuaikan dengan jenis tokonya.</p>
 
           <form className="mt-5 space-y-4" onSubmit={handleSubmit} noValidate>
-            <Field label="Nama kamu" id="name" error={errors.name}>
+            <Field label="Nama" id="name" error={errors.name}>
               {input('name', { autoComplete: 'name', maxLength: 100 })}
             </Field>
             <div className="grid gap-4 sm:grid-cols-2">

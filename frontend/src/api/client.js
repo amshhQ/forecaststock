@@ -9,7 +9,7 @@ export class ApiError extends Error {
 }
 
 const STATUS_MESSAGES = {
-  403: 'Kamu tidak punya akses untuk aksi ini.',
+  403: 'Anda tidak memiliki akses untuk tindakan ini.',
   404: 'Data tidak ditemukan. Mungkin sudah dihapus.',
   413: 'File terlalu besar.',
   429: 'Terlalu banyak percobaan. Tunggu sekitar satu menit lalu coba lagi.',
@@ -39,7 +39,7 @@ export async function api(path, { method = 'GET', body } = {}) {
   // Token tidak berlaku lagi: keluarkan pengguna dan beri tahu alasannya di halaman login.
   if (response.status === 401 && token) {
     useAuthStore.getState().expire()
-    throw new ApiError('Sesi kamu sudah berakhir. Silakan login lagi.', 401)
+    throw new ApiError('Sesi Anda telah berakhir. Silakan masuk kembali.', 401)
   }
   if (response.status === 204) return null
 

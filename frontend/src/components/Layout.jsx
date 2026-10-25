@@ -48,7 +48,7 @@ export default function Layout() {
     mutationFn: () => api('/demo/reset', { method: 'POST' }),
     onSuccess: () => {
       queryClient.invalidateQueries()
-      toast.success('Data demo sudah dikembalikan ke kondisi awal.')
+      toast.success('Data demo telah dikembalikan ke kondisi awal.')
     },
     onError: (error) => toast.error(error.message),
   })
@@ -133,16 +133,16 @@ export default function Layout() {
         <div className="mx-auto max-w-6xl">
           {user?.is_demo && (
             <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-amber-200">
-              <span>Ini akun demo. Angka penjualannya hasil simulasi, bukan dari toko sungguhan.</span>
+              <span>Akun demo dengan data penjualan simulasi.</span>
               <button
                 type="button"
                 className="font-semibold underline hover:no-underline disabled:opacity-50"
                 disabled={resetDemo.isPending}
                 onClick={() => {
-                  if (window.confirm('Kembalikan semua data akun demo ke kondisi awal? Perubahan yang kamu buat akan hilang.')) resetDemo.mutate()
+                  if (window.confirm('Kembalikan data akun demo ke kondisi awal? Semua perubahan pada akun ini akan dihapus.')) resetDemo.mutate()
                 }}
               >
-                {resetDemo.isPending ? 'Mengembalikan…' : 'Reset data demo'}
+                {resetDemo.isPending ? 'Memproses…' : 'Reset data demo'}
               </button>
             </div>
           )}
