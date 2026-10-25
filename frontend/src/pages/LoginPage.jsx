@@ -54,11 +54,9 @@ export default function LoginPage() {
 
         <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
           <h1 className="text-xl font-semibold text-stone-900">Masuk</h1>
-          <p className="mt-1 text-sm text-stone-600">Lihat prediksi penjualan tiap barang dan rekomendasi stok untuk minggu depan.</p>
-
           {sessionExpired && (
             <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900" role="status">
-              Sesi kamu sudah berakhir. Silakan masuk lagi.
+              Sesi Anda telah berakhir. Silakan masuk kembali.
             </p>
           )}
 
@@ -98,28 +96,25 @@ export default function LoginPage() {
               {mutation.isPending ? 'Memeriksa…' : 'Masuk'}
             </Button>
           </form>
-        </div>
 
-        <div className="mt-4 rounded-xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-600">
-          <p>
-            Mau mencoba dulu? Pakai akun demo yang sudah berisi data simulasi 7 produk minimarket selama dua tahun.
-          </p>
-          <Button
-            variant="ghost"
-            className="mt-2 px-2 py-1 text-xs"
-            onClick={() => {
-              setForm(DEMO)
-              setClientErrors({})
-            }}
-          >
-            Isi otomatis akun demo
-          </Button>
+          <div className="mt-4 border-t border-stone-200 pt-4">
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => {
+                setForm(DEMO)
+                setClientErrors({})
+              }}
+            >
+              Gunakan akun demo
+            </Button>
+          </div>
         </div>
 
         <p className="mt-4 text-center text-sm text-stone-600">
           Belum punya akun?{' '}
           <Link to="/daftar" className="font-medium text-teal-800 hover:underline">
-            Daftar untuk toko kamu
+            Daftar
           </Link>
         </p>
       </div>
