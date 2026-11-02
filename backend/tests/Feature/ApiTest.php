@@ -18,7 +18,7 @@ class ApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Carbon::setTestNow('2026-10-21');
+        Carbon::setTestNow('2026-11-11');
     }
 
     private function demoUser(): User
@@ -110,7 +110,7 @@ class ApiTest extends TestCase
 
         $this->getJson("/api/forecasts/{$productId}")
             ->assertOk()
-            ->assertJsonCount(104, 'history')
+            ->assertJsonCount(107, 'history')
             ->assertJsonStructure(['history' => [['week_start', 'quantity', 'trend']]]);
     }
 
@@ -134,7 +134,7 @@ class ApiTest extends TestCase
 
         $this->postJson('/api/sales', [
             'product_id' => $demo->products()->where('sku', 'AIR-600')->first()->id,
-            'sale_date' => '2026-10-21',
+            'sale_date' => '2026-11-11',
             'quantity' => 10,
         ])->assertCreated();
     }
@@ -144,11 +144,11 @@ class ApiTest extends TestCase
         Sanctum::actingAs($this->demoUser());
 
         $csv = "sku,date,quantity\n"
-            ."BRS-5KG,2026-10-12,50\n"
-            ."TIDAK-ADA,2026-10-12,5\n"
-            ."GLP-1KG,2026-10-13,5\n"
-            ."AIR-600,2026-10-12,abc\n"
-            ."TLR-1KG,2026-10-22,5\n";
+            ."BRS-5KG,2026-11-02,50\n"
+            ."TIDAK-ADA,2026-11-02,5\n"
+            ."GLP-1KG,2026-11-03,5\n"
+            ."AIR-600,2026-11-02,abc\n"
+            ."TLR-1KG,2026-11-12,5\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('penjualan.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()
@@ -165,7 +165,7 @@ class ApiTest extends TestCase
         $this->getJson('/api/dashboard')
             ->assertOk()
             ->assertJsonPath('total_products', 7)
-            ->assertJsonPath('last_week', '2026-10-12')
+            ->assertJsonPath('last_week', '2026-11-02')
             ->assertJsonCount(5, 'top_forecasts');
     }
 
@@ -176,7 +176,7 @@ class ApiTest extends TestCase
 
         $this->postJson('/api/sales', [
             'product_id' => $demo->products()->first()->id,
-            'sale_date' => '2026-10-22',
+            'sale_date' => '2026-11-12',
             'quantity' => 10,
         ])->assertStatus(422)->assertJsonValidationErrors('sale_date');
     }
@@ -194,7 +194,7 @@ class ApiTest extends TestCase
     {
         Sanctum::actingAs($this->demoUser());
 
-        $csv = "sku;date;quantity\nBRS-5KG;2026-10-12;50\n";
+        $csv = "sku;date;quantity\nBRS-5KG;2026-11-02;50\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('excel.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()

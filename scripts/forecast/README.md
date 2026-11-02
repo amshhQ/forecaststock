@@ -13,10 +13,10 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 | File | Isi |
 |---|---|
 | `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching, dan class `ForecastResult` untuk hasil per produk |
-| `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
-| `sample_sales.csv` | Data simulasi per hari (3.857 baris): 7 produk minimarket, satu kondisi per produk, sampai 104 minggu (21 Okt 2024 sampai 18 Okt 2026) |
-| `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv`, patokan untuk aplikasi |
-| `tests/test_trend_moment.py` | 32 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
+| `generate_sample_data.py` | Pembuat **data simulasi** 21 Okt 2024 sampai 31 Des 2026: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
+| `sample_sales.csv` | Data simulasi per hari (4.354 baris): 7 produk minimarket, satu kondisi per produk, 21 Okt 2024 sampai 31 Des 2026 |
+| `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv` dengan tanggal hari ini 2026-11-11 (minggu ujian), patokan untuk aplikasi |
+| `tests/test_trend_moment.py` | 35 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
 
 ## Menjalankan
 
@@ -27,9 +27,10 @@ python -m venv .venv                               # sekali saja
 .venv\Scripts\python -m pytest -v                  # jalankan test
 .venv\Scripts\python trend_moment.py               # hitung dari sample_sales.csv, hasil di forecast_result.csv
 .venv\Scripts\python trend_moment.py data.csv hasil.csv
+.venv\Scripts\python trend_moment.py sample_sales.csv expected_forecast.csv 2026-11-11   # tanggal hari ini ditentukan sendiri
 ```
 
-Format CSV masukan: `sku,name,unit,date,quantity` (`date` = tanggal penjualan, format `YYYY-MM-DD`). Penjualan dijumlahkan per minggu mulai Senin, sama seperti aplikasi. Bedanya, aplikasi melewati minggu yang sedang berjalan, sedangkan script menghitung semua minggu di file. Jadi data yang dihitung script sebaiknya berakhir di hari Minggu. Produk dengan data kurang dari 2 minggu dilewati dan namanya ditampilkan.
+Format CSV masukan: `sku,name,unit,date,quantity` (`date` = tanggal penjualan, format `YYYY-MM-DD`). Penjualan dijumlahkan per minggu mulai Senin, sama seperti aplikasi. Minggu yang sedang berjalan dan sesudahnya tidak dihitung, juga sama seperti aplikasi. Argumen ketiga adalah tanggal hari ini (`YYYY-MM-DD`); kalau tidak diisi, dipakai tanggal komputer. Produk dengan data kurang dari 2 minggu dilewati dan namanya ditampilkan.
 
 ## Memakai class ForecastResult
 
@@ -38,12 +39,14 @@ Hasil prediksi setiap produk berupa object `ForecastResult`. Contoh di Python in
 ```python
 from trend_moment import read_sales, forecast_all, sort_by_forecast, search_products
 
-products = read_sales("sample_sales.csv")
+from datetime import date
+
+products = read_sales("sample_sales.csv", today=date(2026, 11, 11))
 results, skipped = forecast_all(products)        # list berisi object ForecastResult
 
 air = search_products(results, "air")[0]
-air.name, air.week_start, round(air.forecast, 2)  # ('Air Mineral 600 ml', datetime.date(2026, 10, 19), 123.86)
-air.mape                                          # 18.8397... (persen)
+air.name, air.week_start, round(air.forecast, 2)  # ('Air Mineral 600 ml', datetime.date(2026, 11, 9), 93.83)
+air.mape                                          # 12.4198... (persen)
 air.accuracy_label()                              # 'baik'
 air.to_csv_row()                                  # satu baris seperti di forecast_result.csv
 

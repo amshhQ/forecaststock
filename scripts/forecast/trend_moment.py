@@ -10,11 +10,13 @@ def week_monday(day):
     return day - timedelta(days=day.weekday())
 
 
-def read_sales(path):
+def read_sales(path, today=None):
     """Baca CSV penjualan per tanggal, lalu jumlahkan per produk per minggu (Senin).
 
-    Baris yang tidak valid memunculkan ValueError beserta nomor barisnya.
+    Kalau today diisi, minggu yang sedang berjalan dan sesudahnya tidak dihitung,
+    sama seperti aplikasi. Baris yang tidak valid memunculkan ValueError beserta nomor barisnya.
     """
+    current_monday = week_monday(today) if today else None
     products = {}
     with open(path, newline="", encoding="utf-8") as file:
         reader = csv.DictReader(file)
@@ -31,6 +33,8 @@ def read_sales(path):
             if sku not in products:
                 products[sku] = {"name": row["name"].strip(), "unit": row["unit"].strip(), "totals": {}}
             monday = week_monday(sale_date)
+            if current_monday and monday >= current_monday:
+                continue
             totals = products[sku]["totals"]
             totals[monday] = totals.get(monday, 0) + quantity
 
@@ -239,12 +243,13 @@ def write_results(path, results):
 
 
 def main(argv):
-    """Pemakaian: python trend_moment.py [input.csv] [output.csv]"""
+    """Pemakaian: python trend_moment.py [input.csv] [output.csv] [tanggal hari ini, YYYY-MM-DD]"""
     source = argv[0] if len(argv) > 0 else "sample_sales.csv"
     output = argv[1] if len(argv) > 1 else "forecast_result.csv"
 
     try:
-        products = read_sales(source)
+        today = date.fromisoformat(argv[2]) if len(argv) > 2 else date.today()
+        products = read_sales(source, today)
         results, skipped = forecast_all(products)
         results = sort_by_forecast(results)
         write_results(output, results)

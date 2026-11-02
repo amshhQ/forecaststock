@@ -4,7 +4,11 @@ Data dibuat untuk minimarket dengan 7 produk, satu kondisi per produk, supaya
 semua kondisi muncul di aplikasi: tren naik stabil (Beras), tren turun (Gula),
 musiman (Air Mineral), naik-turun tajam (Telur), sangat musiman dengan minggu
 tanpa penjualan (Es Krim), data belum setahun (Susu Kental Manis), dan produk
-baru yang datanya baru satu minggu (Teh Botol).
+baru yang mulai dijual 2 November 2026 (Teh Botol).
+
+Data dimulai 21 Oktober 2024 dan berakhir 31 Desember 2026. Aplikasi hanya
+menghitung minggu yang sudah selesai sebelum hari ini, jadi saat ujian
+(9 sampai 15 November 2026) prediksinya memakai penjualan sampai 8 November.
 
 Pola musim adalah asumsi: kebutuhan pokok naik di bulan Lebaran (Maret-April)
 dan Desember, air mineral dan es krim naik saat kemarau (Juli-September) dan
@@ -23,7 +27,8 @@ SEED = 2026
 DAILY_SEED = 2027
 DAY_WEIGHTS = [1.0, 0.9, 0.9, 1.0, 1.1, 1.3, 1.2]
 FIRST_WEEK = date(2024, 10, 21)
-TOTAL_WEEKS = 104
+LAST_DAY = date(2026, 12, 31)
+TOTAL_WEEKS = (LAST_DAY - FIRST_WEEK).days // 7 + 1
 OUTPUT_FILE = "sample_sales.csv"
 
 LEBARAN_MONTHS = (3, 4)
@@ -37,7 +42,7 @@ PRODUCTS = [
     {"sku": "TLR-1KG", "name": "Telur Ayam 1 kg", "unit": "kg", "base": 30, "growth": 0.0, "noise": 0.45, "season": None},
     {"sku": "ESK-CUP", "name": "Es Krim Cup", "unit": "cup", "base": 10, "growth": 0.0, "noise": 0.30, "season": "es"},
     {"sku": "SKM-370", "name": "Susu Kental Manis 370 g", "unit": "kaleng", "base": 20, "growth": 1.0, "noise": 0.10, "season": None, "first_index": 74},
-    {"sku": "TEH-BTL", "name": "Teh Botol 350 ml", "unit": "botol", "base": 20, "growth": 0.0, "noise": 0.10, "season": None, "first_index": 103},
+    {"sku": "TEH-BTL", "name": "Teh Botol 350 ml", "unit": "botol", "base": 20, "growth": 0.0, "noise": 0.10, "season": None, "first_index": 106},
 ]
 
 
@@ -92,6 +97,8 @@ def build_rows():
             quantity = simulate_quantity(product, week_index, week_start.month, rng)
             for offset, day_quantity in enumerate(split_week(quantity, daily_rng)):
                 day = week_start + timedelta(days=offset)
+                if day > LAST_DAY:
+                    break
                 rows.append([product["sku"], product["name"], product["unit"], day.isoformat(), day_quantity])
     return rows
 

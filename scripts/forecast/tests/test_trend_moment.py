@@ -242,3 +242,36 @@ def test_produk_dengan_data_kurang_dari_dua_minggu_dilewati(tmp_path, capsys):
     assert len(lines) == 2
     assert lines[1].startswith("AIR,")
     assert "TEH" in capsys.readouterr().out
+
+
+def test_minggu_berjalan_dan_sesudahnya_tidak_dihitung(tmp_path):
+    path = write_csv(tmp_path, (
+        "AIR,Air Mineral,botol,2026-01-05,20\n"
+        "AIR,Air Mineral,botol,2026-01-11,5\n"
+        "AIR,Air Mineral,botol,2026-01-12,30\n"
+        "AIR,Air Mineral,botol,2026-01-20,40\n"
+    ))
+    products = read_sales(path, today=date(2026, 1, 14))
+    assert products["AIR"]["weeks"] == [(date(2026, 1, 5), 25)]
+
+
+def test_main_memakai_tanggal_hari_ini_dari_argumen(tmp_path):
+    source = write_csv(tmp_path, (
+        "AIR,Air Mineral,botol,2026-01-05,10\n"
+        "AIR,Air Mineral,botol,2026-01-12,12\n"
+        "AIR,Air Mineral,botol,2026-01-19,50\n"
+    ))
+    output = tmp_path / "hasil.csv"
+
+    exit_code = main([str(source), str(output), "2026-01-21"])
+
+    lines = output.read_text(encoding="utf-8").splitlines()
+    assert exit_code == 0
+    assert lines[1].startswith("AIR,Air Mineral,2026-01-19,2,")
+
+
+def test_main_tanggal_hari_ini_tidak_valid_memberi_pesan(tmp_path, capsys):
+    source = write_csv(tmp_path, "AIR,Air Mineral,botol,2026-01-05,10\n")
+    exit_code = main([str(source), str(tmp_path / "hasil.csv"), "besok"])
+    assert exit_code == 1
+    assert "Gagal menghitung" in capsys.readouterr().err
