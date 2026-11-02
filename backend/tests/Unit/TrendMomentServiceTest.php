@@ -120,9 +120,14 @@ class TrendMomentServiceTest extends TestCase
     public function test_hasil_sama_dengan_script_python(): void
     {
         $dir = dirname(__DIR__, 3).'/scripts/forecast';
+        // expected_forecast.csv dibuat dengan tanggal hari ini 2026-11-11, jadi minggu mulai 9 November belum dihitung.
+        $currentMonday = '2026-11-09';
         $weeksBySku = [];
         foreach ($this->readCsv("$dir/sample_sales.csv") as $row) {
             $monday = CarbonImmutable::parse($row['date'])->startOfWeek(CarbonImmutable::MONDAY)->toDateString();
+            if ($monday >= $currentMonday) {
+                continue;
+            }
             $weeksBySku[$row['sku']][$monday] = ($weeksBySku[$row['sku']][$monday] ?? 0) + (int) $row['quantity'];
         }
         $weeksBySku = array_map(function (array $totals) {

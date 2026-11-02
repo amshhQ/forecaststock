@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
 
     private const STOCK_HISTORY = [
         'TLR-1KG' => [
-            ['awal', 20, '2026-10-12', null],
-            ['masuk', 8, '2026-10-15', 'Kiriman pemasok'],
-            ['rusak', -3, '2026-10-16', 'Telur pecah'],
+            ['awal', 20, '2026-11-02', null],
+            ['masuk', 8, '2026-11-05', 'Kiriman pemasok'],
+            ['rusak', -3, '2026-11-06', 'Telur pecah'],
         ],
     ];
 
@@ -89,7 +89,7 @@ class DatabaseSeeder extends Seeder
             }
 
             foreach ($products as $sku => $product) {
-                foreach (self::STOCK_HISTORY[$sku] ?? [['awal', $product->current_stock, '2026-10-12', null]] as [$type, $quantity, $date, $note]) {
+                foreach (self::STOCK_HISTORY[$sku] ?? [['awal', $product->current_stock, '2026-11-02', null]] as [$type, $quantity, $date, $note]) {
                     $product->movements()->create(['type' => $type, 'quantity' => $quantity, 'moved_on' => $date, 'note' => $note]);
                 }
             }
