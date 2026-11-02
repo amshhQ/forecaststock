@@ -1,9 +1,9 @@
 # Script Python Trend Moment
 
-Script prosedural untuk menghitung prediksi penjualan minggu depan dengan metode Trend Moment dari file CSV penjualan harian, beserta unit test PyTest.
+Script Python (sebagian besar prosedural, ditambah satu class untuk hasil prediksi) untuk menghitung prediksi penjualan minggu depan dengan metode Trend Moment dari file CSV penjualan harian, beserta unit test PyTest.
 
 Fungsinya:
-- Bukti MK Programming Fundamentals (Python): kontrol alur, fungsi, list/dict, file I/O, exception handling, PyTest, sorting/searching + Big-O.
+- Bukti MK Programming Fundamentals (Python): kontrol alur, fungsi, list/dict, file I/O, exception handling, pengantar OOP, PyTest, sorting/searching + Big-O.
 - Memverifikasi hasil prediksi aplikasi Laravel: hasil untuk `sample_sales.csv` harus sama dengan `expected_forecast.csv` (dicek PHPUnit).
 
 Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Actions.
@@ -12,11 +12,11 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 
 | File | Isi |
 |---|---|
-| `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching |
+| `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching, dan class `ForecastResult` untuk hasil per produk |
 | `generate_sample_data.py` | Pembuat **data simulasi** 104 minggu: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
 | `sample_sales.csv` | Data simulasi per hari (3.857 baris): 7 produk minimarket, satu kondisi per produk, sampai 104 minggu (21 Okt 2024 sampai 18 Okt 2026) |
 | `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv`, patokan untuk aplikasi |
-| `tests/test_trend_moment.py` | 23 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
+| `tests/test_trend_moment.py` | 32 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
 
 ## Menjalankan
 
@@ -30,6 +30,27 @@ python -m venv .venv                               # sekali saja
 ```
 
 Format CSV masukan: `sku,name,unit,date,quantity` (`date` = tanggal penjualan, format `YYYY-MM-DD`). Penjualan dijumlahkan per minggu mulai Senin, sama seperti aplikasi. Bedanya, aplikasi melewati minggu yang sedang berjalan, sedangkan script menghitung semua minggu di file. Jadi data yang dihitung script sebaiknya berakhir di hari Minggu. Produk dengan data kurang dari 2 minggu dilewati dan namanya ditampilkan.
+
+## Memakai class ForecastResult
+
+Hasil prediksi setiap produk berupa object `ForecastResult`. Contoh di Python interaktif (`.venv\Scripts\python`):
+
+```python
+from trend_moment import read_sales, forecast_all, sort_by_forecast, search_products
+
+products = read_sales("sample_sales.csv")
+results, skipped = forecast_all(products)        # list berisi object ForecastResult
+
+air = search_products(results, "air")[0]
+air.name, air.week_start, round(air.forecast, 2)  # ('Air Mineral 600 ml', datetime.date(2026, 10, 19), 123.86)
+air.mape                                          # 18.8397... (persen)
+air.accuracy_label()                              # 'baik'
+air.to_csv_row()                                  # satu baris seperti di forecast_result.csv
+
+[r.sku for r in sort_by_forecast(results)]        # SKU dari prediksi tertinggi
+```
+
+Label akurasi memakai batas yang sama dengan aplikasi: di bawah 10% sangat baik, di bawah 20% baik, sampai 50% cukup, di atas 50% kurang akurat. Kalau MAPE belum bisa dihitung (data kurang dari 10 minggu), labelnya "belum bisa diukur".
 
 ## Rumus
 
