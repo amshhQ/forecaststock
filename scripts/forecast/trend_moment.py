@@ -120,6 +120,44 @@ def forecast_next_week(weeks):
     }
 
 
+class ForecastResult:
+    """Hasil prediksi satu produk untuk minggu depan, beserta akurasinya."""
+
+    def __init__(self, sku, name, prediction, mape=None):
+        self.sku = sku
+        self.name = name
+        self.week_start = prediction["week_start"]
+        self.x = prediction["x"]
+        self.a = prediction["a"]
+        self.b = prediction["b"]
+        self.trend = prediction["trend"]
+        self.seasonal_index = prediction["seasonal_index"]
+        self.forecast = prediction["forecast"]
+        self.mape = mape
+
+    def accuracy_label(self):
+        """Kategori MAPE, sama dengan label di aplikasi."""
+        if self.mape is None:
+            return "belum bisa diukur"
+        elif self.mape < 10:
+            return "sangat baik"
+        elif self.mape < 20:
+            return "baik"
+        elif self.mape <= 50:
+            return "cukup"
+        else:
+            return "kurang akurat"
+
+    def to_csv_row(self):
+        """Satu baris CSV hasil, desimal dibulatkan 4 angka."""
+        return [
+            self.sku, self.name, self.week_start.isoformat(), self.x,
+            f"{self.a:.4f}", f"{self.b:.4f}", f"{self.trend:.4f}",
+            f"{self.seasonal_index:.4f}", f"{self.forecast:.4f}",
+            "" if self.mape is None else f"{self.mape:.4f}",
+        ]
+
+
 BACKTEST_WEEKS = 8
 
 
@@ -156,7 +194,7 @@ def sort_by_forecast(results):
     for i in range(1, len(ranked)):
         current = ranked[i]
         j = i - 1
-        while j >= 0 and ranked[j]["forecast"] < current["forecast"]:
+        while j >= 0 and ranked[j].forecast < current.forecast:
             ranked[j + 1] = ranked[j]
             j -= 1
         ranked[j + 1] = current
@@ -168,7 +206,7 @@ def search_products(results, keyword):
     keyword = keyword.strip().lower()
     found = []
     for result in results:
-        if keyword in result["name"].lower() or keyword in result["sku"].lower():
+        if keyword in result.name.lower() or keyword in result.sku.lower():
             found.append(result)
     return found
 
@@ -181,12 +219,10 @@ def forecast_all(products):
         if len(product["weeks"]) < 2:
             skipped.append(sku)
             continue
-        result = forecast_next_week(product["weeks"])
-        result["sku"] = sku
-        result["name"] = product["name"]
+        prediction = forecast_next_week(product["weeks"])
         accuracy = backtest(product["weeks"])
-        result["mape"] = accuracy["mape"] if accuracy else None
-        results.append(result)
+        mape = accuracy["mape"] if accuracy else None
+        results.append(ForecastResult(sku, product["name"], prediction, mape))
     return results, skipped
 
 
@@ -194,17 +230,12 @@ OUTPUT_COLUMNS = ["sku", "name", "week_start", "x", "a", "b", "trend", "seasonal
 
 
 def write_results(path, results):
-    """Tulis hasil ke CSV, desimal dibulatkan 4 angka."""
+    """Tulis hasil ke CSV, satu baris per produk."""
     with open(path, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file, lineterminator="\n")
         writer.writerow(OUTPUT_COLUMNS)
         for r in results:
-            writer.writerow([
-                r["sku"], r["name"], r["week_start"].isoformat(), r["x"],
-                f"{r['a']:.4f}", f"{r['b']:.4f}", f"{r['trend']:.4f}",
-                f"{r['seasonal_index']:.4f}", f"{r['forecast']:.4f}",
-                "" if r.get("mape") is None else f"{r['mape']:.4f}",
-            ])
+            writer.writerow(r.to_csv_row())
 
 
 def main(argv):
@@ -224,10 +255,10 @@ def main(argv):
         print(f"Gagal menghitung: {error}", file=sys.stderr)
         return 1
 
-    print(f"{'SKU':<10}{'Produk':<26}{'Minggu':<12}{'Prediksi':>10}{'MAPE':>9}")
+    print(f"{'SKU':<10}{'Produk':<26}{'Minggu':<12}{'Prediksi':>10}{'MAPE':>9}  Akurasi")
     for r in results:
-        mape = "-" if r.get("mape") is None else f"{r['mape']:.2f}%"
-        print(f"{r['sku']:<10}{r['name']:<26}{r['week_start'].isoformat():<12}{r['forecast']:>10.2f}{mape:>9}")
+        mape = "-" if r.mape is None else f"{r.mape:.2f}%"
+        print(f"{r.sku:<10}{r.name:<26}{r.week_start.isoformat():<12}{r.forecast:>10.2f}{mape:>9}  {r.accuracy_label()}")
     if skipped:
         print(f"\nDilewati karena data kurang dari 2 minggu: {', '.join(skipped)}")
     print(f"\nHasil lengkap ditulis ke {output}")

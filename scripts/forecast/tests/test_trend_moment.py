@@ -3,6 +3,7 @@ from datetime import date, timedelta
 import pytest
 
 from trend_moment import (
+    ForecastResult,
     backtest,
     forecast_next_week,
     main,
@@ -111,25 +112,58 @@ def test_prediksi_tidak_pernah_negatif():
     assert result["forecast"] == 0
 
 
+def make_result(sku, name, forecast, mape=None):
+    prediction = {"week_start": date(2026, 1, 5), "x": 4, "a": 10, "b": 2, "trend": 18, "seasonal_index": 1.0, "forecast": forecast}
+    return ForecastResult(sku, name, prediction, mape)
+
+
 RESULTS = [
-    {"sku": "AIR", "name": "Air Mineral", "forecast": 5},
-    {"sku": "MIE", "name": "Mi Instan", "forecast": 9},
-    {"sku": "KPI", "name": "Kopi Sachet", "forecast": 7},
+    make_result("AIR", "Air Mineral", 5),
+    make_result("MIE", "Mi Instan", 9),
+    make_result("KPI", "Kopi Sachet", 7),
 ]
+
+
+def test_hasil_prediksi_menyimpan_data_satu_produk():
+    result = make_result("AIR", "Air Mineral", 18.5, 12.25)
+    assert result.sku == "AIR"
+    assert result.name == "Air Mineral"
+    assert result.week_start == date(2026, 1, 5)
+    assert result.forecast == 18.5
+    assert result.mape == 12.25
+
+
+@pytest.mark.parametrize("mape, label", [
+    (9.99, "sangat baik"),
+    (10, "baik"),
+    (19.99, "baik"),
+    (20, "cukup"),
+    (50, "cukup"),
+    (50.01, "kurang akurat"),
+    (None, "belum bisa diukur"),
+])
+def test_label_akurasi_mengikuti_skala_mape(mape, label):
+    assert make_result("AIR", "Air Mineral", 18, mape).accuracy_label() == label
+
+
+def test_baris_csv_dibulatkan_empat_angka():
+    result = make_result("AIR", "Air Mineral", 18.123456, 4.5)
+    assert result.to_csv_row() == ["AIR", "Air Mineral", "2026-01-05", 4, "10.0000", "2.0000", "18.0000", "1.0000", "18.1235", "4.5000"]
+    assert make_result("AIR", "Air Mineral", 18).to_csv_row()[-1] == ""
 
 
 def test_urut_dari_prediksi_tertinggi_tanpa_mengubah_data_asli():
     ranked = sort_by_forecast(RESULTS)
-    assert [r["sku"] for r in ranked] == ["MIE", "KPI", "AIR"]
-    assert [r["sku"] for r in RESULTS] == ["AIR", "MIE", "KPI"]
+    assert [r.sku for r in ranked] == ["MIE", "KPI", "AIR"]
+    assert [r.sku for r in RESULTS] == ["AIR", "MIE", "KPI"]
 
 
 def test_cari_produk_berdasarkan_nama_tanpa_peduli_huruf_besar():
-    assert [r["sku"] for r in search_products(RESULTS, "mineral")] == ["AIR"]
+    assert [r.sku for r in search_products(RESULTS, "mineral")] == ["AIR"]
 
 
 def test_cari_produk_berdasarkan_sku():
-    assert [r["sku"] for r in search_products(RESULTS, "kpi")] == ["KPI"]
+    assert [r.sku for r in search_products(RESULTS, "kpi")] == ["KPI"]
 
 
 def test_cari_produk_tidak_ditemukan():
