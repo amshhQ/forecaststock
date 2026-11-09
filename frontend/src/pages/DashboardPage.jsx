@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { api } from '../api/client'
-import { Card, Empty, ErrorMessage, InfoLink, InfoTip, LinkButton, Loading, PageHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { addDays, currentMonday, formatDate, formatNumber, weekLabel } from '../lib/format'
+import { Card, Empty, ErrorMessage, InfoLink, InfoTip, LinkButton, Loading, PageHeader, Table, td, th } from '../components/ui'
+import { addDays, formatDate, formatNumber, weekLabel } from '../lib/format'
 import { useAuthStore } from '../stores/authStore'
 
 const STATUS_TILES = [
@@ -30,8 +30,7 @@ export default function DashboardPage() {
   const nextWeek = d.top_forecasts[0]?.forecast.week_start
   const lastDay = d.last_week ? addDays(d.last_week, 6) : null
   const summary = [`${d.total_products} produk.`]
-  // if (lastDay) summary.push(`Penjualan sudah lengkap sampai ${formatDate(lastDay)}${nextWeek ? `, jadi prediksi dibuat untuk ${weekLabel(nextWeek)}` : ''}.`)
-  // if (nextWeek && nextWeek < currentMonday()) summary.push('Belum ada penjualan baru setelah tanggal itu, jadi prediksinya belum maju ke minggu ini.')
+  if (lastDay) summary.push(`Penjualan sudah lengkap sampai ${formatDate(lastDay)}${nextWeek ? `, jadi prediksi dibuat untuk ${weekLabel(nextWeek)}` : ''}.`)
 
   if (d.total_products === 0) {
     return (
@@ -81,9 +80,6 @@ export default function DashboardPage() {
           <Card key={key} className="p-4">
             <p className="text-sm text-stone-600">{label}</p>
             <p className="mt-1 text-3xl font-semibold text-stone-900">{d.status[key]}</p>
-            <div className="mt-1.5 flex flex-wrap items-center gap-2">
-              <StatusBadge status={key} />
-            </div>
             <p className="mt-1.5 text-xs text-stone-500">{note}</p>
           </Card>
         ))}

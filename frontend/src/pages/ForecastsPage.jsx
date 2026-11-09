@@ -2,11 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { api } from '../api/client'
-import { Empty, ErrorMessage, LinkButton, Loading, PageHeader, SearchInput, SortHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { formatNumber, mapeLabel, weekLabel } from '../lib/format'
+import { Empty, ErrorMessage, LinkButton, Loading, PageHeader, SearchInput, SortHeader, Table, td, th } from '../components/ui'
+import { formatDecimal, formatNumber, mapeLabel, weekLabel } from '../lib/format'
 import { matches, sortRows, useDebounce, useSort } from '../lib/hooks'
-
-const STATUS_ORDER = { perlu_restock: 0, berlebih: 1, aman: 2, data_kurang: 3 }
 
 const sortValue = (row, key) =>
   ({
@@ -16,7 +14,6 @@ const sortValue = (row, key) =>
     seasonal: row.forecast?.seasonal_index,
     forecast: row.forecast?.value,
     mape: row.accuracy?.mape,
-    status: STATUS_ORDER[row.status],
   })[key]
 
 const INFO = {
@@ -76,7 +73,6 @@ export default function ForecastsPage() {
               <SortHeader label="Indeks musim" column="seasonal" sort={sort} onSort={toggleSort} align="right" />
               <SortHeader label="Prediksi" column="forecast" sort={sort} onSort={toggleSort} align="right" />
               <SortHeader label="Error (MAPE)" column="mape" sort={sort} onSort={toggleSort} align="right" />
-              <SortHeader label="Status stok" column="status" sort={sort} onSort={toggleSort} />
               <th className={th}>
                 <span className="sr-only">Detail</span>
               </th>
@@ -90,7 +86,7 @@ export default function ForecastsPage() {
                 </td>
                 <td className={`${td} text-right`}>{r.weeks_of_data} minggu</td>
                 <td className={`${td} text-right`}>{formatNumber(r.forecast?.trend)}</td>
-                <td className={`${td} text-right`}>{r.forecast ? r.forecast.seasonal_index.toFixed(4) : '-'}</td>
+                <td className={`${td} text-right`}>{r.forecast ? formatDecimal(r.forecast.seasonal_index) : '-'}</td>
                 <td className={`${td} text-right font-semibold`}>
                   {r.forecast ? (
                     <>
@@ -108,9 +104,6 @@ export default function ForecastsPage() {
                       {formatNumber(r.accuracy.mape)}% <span className="text-xs text-stone-500">{mapeLabel(r.accuracy.mape)}</span>
                     </>
                   )}
-                </td>
-                <td className={td}>
-                  <StatusBadge status={r.status} />
                 </td>
                 <td className={`${td} text-right`}>
                   <Link to={`/prediksi/${r.product.id}`} className="text-teal-700 hover:underline">

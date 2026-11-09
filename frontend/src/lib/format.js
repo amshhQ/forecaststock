@@ -3,6 +3,10 @@ const dateFormat = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'sh
 
 export const formatNumber = (value) => (value === null || value === undefined ? '-' : numberFormat.format(value))
 
+const decimalFormat = new Intl.NumberFormat('id-ID', { minimumFractionDigits: 4, maximumFractionDigits: 4 })
+
+export const formatDecimal = (value) => (value === null || value === undefined ? '-' : decimalFormat.format(value))
+
 export function formatDate(isoDate) {
   if (!isoDate) return '-'
   const [year, month, day] = isoDate.split('-').map(Number)
