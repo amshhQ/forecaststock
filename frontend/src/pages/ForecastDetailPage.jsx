@@ -4,7 +4,7 @@ import { useParams } from 'react-router'
 import { CartesianGrid, LabelList, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { api } from '../api/client'
 import { Button, Card, Empty, InfoLink, InfoTip, LinkButton, Loading, PageHeader, StatusBadge, Table, td, th } from '../components/ui'
-import { formatDate, formatNumber, mapeLabel, weekLabel } from '../lib/format'
+import { formatDate, formatDecimal, formatNumber, mapeLabel, weekLabel } from '../lib/format'
 
 const COLORS = { actual: '#2a78d6', trend: '#eb6834', forecast: '#1baf7a' }
 const RANGES = [
@@ -16,13 +16,11 @@ const RANGES = [
 const INFO = {
   from: ['Dihitung dari riwayat penjualan produk ini.'],
   how: ['Arahkan kursor ke grafik untuk melihat angka tiap minggu. Tombol 26, 52, dan Semua mengatur rentangnya.'],
-  note: ['Angka di halaman ini sama dengan hasil script Python di folder scripts/forecast, dan kesamaannya dicek otomatis oleh test.'],
 }
 
 export default function ForecastDetailPage() {
   const { id } = useParams()
   const [range, setRange] = useState(26)
-  const [showTable, setShowTable] = useState(false)
   const detail = useQuery({ queryKey: ['forecasts', id], queryFn: () => api(`/forecasts/${id}`), retry: false })
 
   if (detail.isPending) return <Loading label="Menghitung prediksi…" />
@@ -133,33 +131,6 @@ export default function ForecastDetailPage() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-        <Button variant="secondary" className="mt-3 px-2.5 py-1 text-xs" aria-expanded={showTable} onClick={() => setShowTable(!showTable)}>
-          {showTable ? 'Sembunyikan tabel' : 'Tampilkan sebagai tabel'}
-        </Button>
-        {showTable && (
-          <div className="mt-3 max-h-80 overflow-y-auto">
-            <Table>
-              <thead className="bg-stone-50">
-                <tr>
-                  <th className={th}>Minggu</th>
-                  <th className={`${th} text-right`}>Aktual</th>
-                  <th className={`${th} text-right`}>Tren</th>
-                  <th className={`${th} text-right`}>Prediksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-100">
-                {[...chartData].reverse().map((row) => (
-                  <tr key={row.week}>
-                    <td className={td}>{formatDate(row.week)}</td>
-                    <td className={`${td} text-right`}>{formatNumber(row.actual)}</td>
-                    <td className={`${td} text-right`}>{formatNumber(row.trend)}</td>
-                    <td className={`${td} text-right`}>{formatNumber(row.forecast)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-        )}
       </Card>
 
       <Card>
@@ -174,11 +145,11 @@ export default function ForecastDetailPage() {
         </div>
         <dl className="mt-3 grid gap-x-8 gap-y-1 text-sm lg:grid-cols-2">
           <Row label="1. Jumlah data (n)" value={`${weeks} minggu, X = 0 sampai ${weeks - 1}`} />
-          <Row label="2. Persamaan tren" value={`Y = ${forecast.a} + (${forecast.b}) X`} />
+          <Row label="2. Persamaan tren" value={`Y = ${formatDecimal(forecast.a)} + (${formatDecimal(forecast.b)}) X`} />
           <Row label="3. X untuk minggu yang diprediksi" value={weeks} />
-          <Row label="4. Nilai tren" value={`${forecast.a} + (${forecast.b} × ${weeks}) = ${formatNumber(forecast.trend)}`} />
-          <Row label="5. Indeks musim bulan tersebut" value={weeks >= 52 ? forecast.seasonal_index : '1 (data < 52 minggu)'} />
-          <Row label="6. Prediksi" value={`${formatNumber(forecast.trend)} × ${forecast.seasonal_index} = ${formatNumber(forecast.value)}`} />
+          <Row label="4. Nilai tren" value={`${formatDecimal(forecast.a)} + (${formatDecimal(forecast.b)} × ${weeks}) = ${formatNumber(forecast.trend)}`} />
+          <Row label="5. Indeks musim bulan tersebut" value={weeks >= 52 ? formatDecimal(forecast.seasonal_index) : '1 (data < 52 minggu)'} />
+          <Row label="6. Prediksi" value={`${formatNumber(forecast.trend)} × ${formatDecimal(forecast.seasonal_index)} = ${formatNumber(forecast.value)}`} />
           <Row label="7. Target stok (dibulatkan ke atas)" value={`${formatNumber(forecast.value)} dibulatkan ke atas menjadi ${target - product.min_stock}, ditambah ${product.min_stock} = ${target}`} />
           <Row label="8. Perlu ditambah" value={`${target} − ${product.current_stock} = ${shortage}${shortage < 0 ? ', jadi 0 (stok cukup)' : ''}`} />
         </dl>
