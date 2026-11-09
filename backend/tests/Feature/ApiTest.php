@@ -50,6 +50,11 @@ class ApiTest extends TestCase
         $this->getJson('/api/products')->assertUnauthorized();
     }
 
+    public function test_api_dibuka_dari_browser_tanpa_login_tetap_401(): void
+    {
+        $this->get('/api/products')->assertUnauthorized()->assertJson(['message' => 'Unauthenticated.']);
+    }
+
     public function test_pengguna_tidak_bisa_melihat_produk_milik_akun_lain(): void
     {
         $demo = $this->demoUser();
