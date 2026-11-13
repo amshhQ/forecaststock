@@ -243,6 +243,15 @@ class ApiTest extends TestCase
         $this->assertSame($rows, Sale::count());
     }
 
+    public function test_data_demo_hanya_berisi_penjualan_sampai_kemarin(): void
+    {
+        Carbon::setTestNow('2026-11-13');
+        $demo = $this->demoUser();
+
+        $this->assertSame('2026-11-12', Sale::max('sale_date'));
+        $this->assertSame(7, $demo->products()->count());
+    }
+
     public function test_reset_data_demo_ditolak_untuk_akun_biasa(): void
     {
         Sanctum::actingAs(User::factory()->create());
