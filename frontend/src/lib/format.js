@@ -15,11 +15,6 @@ export function formatDate(isoDate) {
 
 const shortDate = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' })
 
-export function formatShortDate(isoDate) {
-  const [year, month, day] = isoDate.split('-').map(Number)
-  return shortDate.format(new Date(year, month - 1, day))
-}
-
 export function addDays(isoDate, days) {
   const [year, month, day] = isoDate.split('-').map(Number)
   const date = new Date(year, month - 1, day + days)
