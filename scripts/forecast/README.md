@@ -13,9 +13,9 @@ Script ini **tidak di-hosting**. Hanya dijalankan di laptop dan di GitHub Action
 | File | Isi |
 |---|---|
 | `trend_moment.py` | Perhitungan: baca CSV dan jumlahkan per minggu, koefisien a & b, indeks musim, prediksi minggu depan, uji mundur (MAPE), sorting, searching, dan class `ForecastResult` untuk hasil per produk |
-| `generate_sample_data.py` | Pembuat **data simulasi** 21 Okt 2024 sampai 31 Des 2026: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
-| `sample_sales.csv` | Data simulasi per hari (4.354 baris): 7 produk minimarket, satu kondisi per produk, 21 Okt 2024 sampai 31 Des 2026 |
-| `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv` dengan tanggal hari ini 2026-11-11 (minggu ujian), patokan untuk aplikasi |
+| `generate_sample_data.py` | Pembuat **data simulasi** 21 Okt 2024 sampai 15 Nov 2026: total mingguan dibuat dulu, lalu dibagi ke hari-harinya (bukan data asli, seed tetap) |
+| `sample_sales.csv` | Data simulasi per hari (4.025 baris): 7 produk minimarket, satu kondisi per produk, 21 Okt 2024 sampai 15 Nov 2026 |
+| `expected_forecast.csv` | Hasil prediksi untuk `sample_sales.csv` dengan tanggal hari ini 2026-11-16 (prediksi minggu 16 sampai 22 Nov), patokan untuk aplikasi |
 | `tests/test_trend_moment.py` | 35 unit test, coverage 99% (ditulis dengan TDD, lihat riwayat commit) |
 
 ## Menjalankan
@@ -27,7 +27,7 @@ python -m venv .venv                               # sekali saja
 .venv\Scripts\python -m pytest -v                  # jalankan test
 .venv\Scripts\python trend_moment.py               # hitung dari sample_sales.csv, hasil di forecast_result.csv
 .venv\Scripts\python trend_moment.py data.csv hasil.csv
-.venv\Scripts\python trend_moment.py sample_sales.csv expected_forecast.csv 2026-11-11   # tanggal hari ini ditentukan sendiri
+.venv\Scripts\python trend_moment.py sample_sales.csv expected_forecast.csv 2026-11-16   # tanggal hari ini ditentukan sendiri
 ```
 
 Format CSV masukan: `sku,name,unit,date,quantity` (`date` = tanggal penjualan, format `YYYY-MM-DD`). Penjualan dijumlahkan per minggu mulai Senin, sama seperti aplikasi. Minggu yang sedang berjalan dan sesudahnya tidak dihitung, juga sama seperti aplikasi. Argumen ketiga adalah tanggal hari ini (`YYYY-MM-DD`); kalau tidak diisi, dipakai tanggal komputer. Produk dengan data kurang dari 2 minggu dilewati dan namanya ditampilkan.
