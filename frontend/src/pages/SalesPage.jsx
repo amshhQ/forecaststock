@@ -5,14 +5,14 @@ import { api } from '../api/client'
 import SaleFormModal from '../components/SaleForm'
 import SalesImportModal from '../components/SalesImport'
 import { Button, Empty, ErrorMessage, inputClass, LinkButton, Loading, PageHeader, SortHeader, Table, td, th } from '../components/ui'
-import { currentMonday, formatDate, formatNumber, mondayOf } from '../lib/format'
+import { addDays, currentMonday, formatDate, formatNumber, formatWeek, mondayOf } from '../lib/format'
 import { useSort } from '../lib/hooks'
 import { toast } from 'sonner'
 
 const INFO = {
   from: ['Diisi lewat tombol Catat penjualan (kapan saja, per tanggal) atau Impor CSV untuk banyak data sekaligus.'],
   needs: ['Produknya sudah ada di Produk & Stok.'],
-  how: ['Kolom Minggu prediksi menunjukkan penjualan itu dijumlah ke minggu yang mana. Prediksi memakai total per minggu.'],
+  how: ['Kolom Minggu penjualan menunjukkan penjualan itu dijumlah ke minggu yang mana. Prediksi memakai total per minggu yang sudah selesai, jadi penjualan minggu ini baru dihitung mulai Senin berikutnya.'],
   note: [
     'Prediksi butuh minimal 2 minggu data, dan pola musim bulanan baru dihitung setelah 52 minggu. Minggu yang sedang berjalan baru dihitung setelah minggunya selesai.',
     'Mencatat penjualan mengurangi stok, dan menghapusnya mengembalikan stok.',
@@ -119,7 +119,7 @@ export default function SalesPage() {
             <thead className="bg-stone-50">
               <tr>
                 <SortHeader label="Tanggal" column="sale_date" sort={sort} onSort={changeSort} />
-                <th className={th}>Minggu prediksi</th>
+                <th className={th}>Minggu penjualan</th>
                 <th className={th}>Produk</th>
                 <SortHeader label="Terjual" column="quantity" sort={sort} onSort={changeSort} align="right" />
                 <th className={th}>
@@ -132,8 +132,10 @@ export default function SalesPage() {
                 <tr key={s.id} className="hover:bg-stone-50/70">
                   <td className={td}>{formatDate(s.sale_date)}</td>
                   <td className={`${td} text-stone-600`}>
-                    {formatDate(mondayOf(s.sale_date))}
-                    {mondayOf(s.sale_date) >= currentMonday() && <span className="ml-2 rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">belum dihitung</span>}
+                    {formatWeek(mondayOf(s.sale_date))}
+                    {mondayOf(s.sale_date) >= currentMonday() && (
+                      <span className="ml-2 whitespace-nowrap rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">dihitung mulai {formatDate(addDays(mondayOf(s.sale_date), 7))}</span>
+                    )}
                   </td>
                   <td className={td}>{s.product.name}</td>
                   <td className={`${td} text-right`}>
