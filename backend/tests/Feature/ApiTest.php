@@ -115,7 +115,7 @@ class ApiTest extends TestCase
 
         $this->getJson("/api/forecasts/{$productId}")
             ->assertOk()
-            ->assertJsonCount(107, 'history')
+            ->assertJsonCount(108, 'history')
             ->assertJsonStructure(['history' => [['week_start', 'quantity', 'trend']]]);
     }
 
