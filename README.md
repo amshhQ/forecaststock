@@ -59,7 +59,7 @@ Kalau tampilan berantakan atau data tidak muncul (API 404), cek apakah ada serve
 ## Pengujian
 
 ```powershell
-cd backend; php artisan test                              # 86 test
+cd backend; php artisan test                              # 87 test
 cd scripts/forecast; .venv\Scripts\python -m pytest -v    # 35 test
 cd frontend; npx oxlint src; npm run build
 ```
