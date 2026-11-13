@@ -5,7 +5,7 @@ import { api } from '../api/client'
 import SaleFormModal from '../components/SaleForm'
 import SalesImportModal from '../components/SalesImport'
 import { Button, Empty, ErrorMessage, inputClass, LinkButton, Loading, PageHeader, SortHeader, Table, td, th } from '../components/ui'
-import { addDays, currentMonday, formatDate, formatNumber, formatWeek, mondayOf } from '../lib/format'
+import { addDays, currentMonday, formatDate, formatNumber, formatShortDate, formatWeek, mondayOf } from '../lib/format'
 import { useSort } from '../lib/hooks'
 import { toast } from 'sonner'
 
@@ -134,7 +134,12 @@ export default function SalesPage() {
                   <td className={`${td} text-stone-600`}>
                     {formatWeek(mondayOf(s.sale_date))}
                     {mondayOf(s.sale_date) >= currentMonday() && (
-                      <span className="ml-2 whitespace-nowrap rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">dihitung mulai {formatDate(addDays(mondayOf(s.sale_date), 7))}</span>
+                      <span
+                        className="ml-2 whitespace-nowrap rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600"
+                        title="Minggu ini belum selesai. Penjualan sudah mengurangi stok, dan totalnya masuk prediksi setelah minggunya selesai."
+                      >
+                        dihitung {formatShortDate(addDays(mondayOf(s.sale_date), 7))}
+                      </span>
                     )}
                   </td>
                   <td className={td}>{s.product.name}</td>
