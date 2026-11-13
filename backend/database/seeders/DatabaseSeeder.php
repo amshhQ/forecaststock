@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
 
             $products = [];
             $sales = [];
+            $today = now()->toDateString();
             foreach ($this->readSales() as $row) {
                 $sku = $row['sku'];
                 if (! isset($products[$sku])) {
@@ -75,6 +76,10 @@ class DatabaseSeeder extends Seeder
                         'current_stock' => $stock,
                         'min_stock' => $minStock,
                     ]);
+                }
+                // Data simulasi tidak boleh terlihat seperti penjualan yang belum terjadi.
+                if ($row['date'] >= $today) {
+                    continue;
                 }
                 $sales[] = [
                     'product_id' => $products[$sku]->id,
