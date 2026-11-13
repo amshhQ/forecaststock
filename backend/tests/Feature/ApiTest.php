@@ -18,7 +18,7 @@ class ApiTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Carbon::setTestNow('2026-11-11');
+        Carbon::setTestNow('2026-11-16');
     }
 
     private function demoUser(): User
@@ -153,7 +153,7 @@ class ApiTest extends TestCase
             ."TIDAK-ADA,2026-11-02,5\n"
             ."GLP-1KG,2026-11-03,5\n"
             ."AIR-600,2026-11-02,abc\n"
-            ."TLR-1KG,2026-11-12,5\n";
+            ."TLR-1KG,2026-11-17,5\n";
 
         $this->post('/api/sales/import', ['file' => UploadedFile::fake()->createWithContent('penjualan.csv', $csv)], ['Accept' => 'application/json'])
             ->assertOk()
@@ -170,7 +170,7 @@ class ApiTest extends TestCase
         $this->getJson('/api/dashboard')
             ->assertOk()
             ->assertJsonPath('total_products', 7)
-            ->assertJsonPath('last_week', '2026-11-02')
+            ->assertJsonPath('last_week', '2026-11-09')
             ->assertJsonCount(5, 'top_forecasts');
     }
 
@@ -181,7 +181,7 @@ class ApiTest extends TestCase
 
         $this->postJson('/api/sales', [
             'product_id' => $demo->products()->first()->id,
-            'sale_date' => '2026-11-12',
+            'sale_date' => '2026-11-17',
             'quantity' => 10,
         ])->assertStatus(422)->assertJsonValidationErrors('sale_date');
     }
